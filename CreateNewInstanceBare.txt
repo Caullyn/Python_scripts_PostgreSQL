@@ -1,0 +1,90 @@
+﻿--------------------------------------------------------
+1. Do a Find/Replace for these variables in the script.
+--------------------------------------------------------
+$SLAVE_IP
+$SLAVE_HOST
+$MASTER_IP
+$MASTER_HOST
+
+--------------------------------------------------------
+2. Run these commands in MASTER and SLAVE.
+--------------------------------------------------------
+
+aptitude -y purge rightscale
+sed -i -e '$a\deb http://backports.debian.org/debian-backports squeeze-backports main' /etc/apt/sources.list
+mkdir /pgdata
+mkdir /pglog
+apt-get -y update
+apt-get -y -t squeeze-backports install postgresql-9.1
+chown -R postgres.postgres /pgdata
+chown -R postgres.postgres /pglog
+aptitude -y update
+aptitude -y install python-psycopg2
+aptitude -y install sudo
+updatedb
+/usr/sbin/dpkg-reconfigure tzdata
+su - postgres
+/usr/lib/postgresql/9.1/bin/pg_ctl stop -D /var/lib/postgresql/9.1/main/
+/usr/lib/postgresql/9.1/bin/initdb -D /pgdata
+
+--------------------------------------------------------
+3. Send files needed to /pgjob (backup.py, vacuum.py, etc).
+4. Add lines in cron.txt to crontab. 
+--------------------------------------------------------
+5. Run these commands on Master ONLY
+--------------------------------------------------------
+
+sed -i -e '$a\host    replication  repuser   $SLAVE_IP     trust' /pgdata/pg_hba.conf
+sed -i 's/#log_connections = off/log_connections = on/g' /pgdata/postgresql.conf
+sed -i 's@#data_directory = '"'"'ConfigDir'"'"'@data_directory = '"'"'/pgdata'"'"'@g' /pgdata/postgresql.conf
+sed -i 's@#hba_file = '"'"'ConfigDir/pg_hba.conf'"'"'@hba_file = '"'"'/pgdata/pg_hba.conf'"'"'@g' /pgdata/postgresql.conf
+sed -i 's@#ident_file = '"'"'ConfigDir/pg_ident.conf'"'"'@ident_file = '"'"'/pgdata/pg_ident.conf'"'"'@g' /pgdata/postgresql.conf
+sed -i 's/#max_wal_senders = 0/max_wal_senders = 1/g' /pgdata/postgresql.conf
+sed -i 's/#wal_level = minimal/wal_level = hot_standby/g' /pgdata/postgresql.conf
+sed -i 's/#archive_mode = off/archive_mode = on/g' /pgdata/postgresql.conf
+sed -i 's/#archive_command = '"'"''"'"'/archive_command = '"'"'cd .'"'"'/g' /pgdata/postgresql.conf
+sed -i 's/#listen_addresses = '"'"'localhost'"'"'/listen_addresses = '"'"'*'"'"'/g' /pgdata/postgresql.conf
+sed -i 's/#port = 5432/port = 5432/g' /pgdata/postgresql.conf
+sed -i 's/#wal_keep_segments = 0/wal_keep_segments = 192/g' /pgdata/postgresql.conf
+sed -i 's/#tcp_keepalives_idle = 0/tcp_keepalives_idle = 8/g' /pgdata/postgresql.conf
+/usr/lib/postgresql/9.1/bin/pg_ctl start -D /pgdata
+/etc/init.d/cron start
+
+psql -c "create ROLE repuser SUPERUSER LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD 'pwoqI*8';"
+psql -c "select pg_start_backup('base backup for streaming rep')"
+rsync -av /pgdata/ --delete --exclude server.crt --exclude server.key --exclude recovery.done --exclude postmaster.pid --exclude pg_xlog --exclude archive $SLAVE_HOST:/pgdata
+
+--------------------------------------------------------
+6. Run these commands on Slave ONLY
+--------------------------------------------------------
+
+sed -i -e '$a\host    replication  repuser   $MASTER_IP    trust' /pgdata/pg_hba.conf
+sed -i 's/#log_connections = off/log_connections = on/g' /pgdata/postgresql.conf
+sed -i 's@#data_directory = '"'"'ConfigDir'"'"'@data_directory = '"'"'/pgdata'"'"'@g' /pgdata/postgresql.conf
+sed -i 's@#hba_file = '"'"'ConfigDir/pg_hba.conf'"'"'@hba_file = '"'"'/pgdata/pg_hba.conf'"'"'@g' /pgdata/postgresql.conf
+sed -i 's@#ident_file = '"'"'ConfigDir/pg_ident.conf'"'"'@ident_file = '"'"'/pgdata/pg_ident.conf'"'"'@g' /pgdata/postgresql.conf
+sed -i 's/#hot_standby = off/hot_standby = on/g' /pgdata/postgresql.conf
+sed -i 's/wal_level = hot_standby/#wal_level = minimal/g' /pgdata/postgresql.conf
+sed -i 's/archive_mode = on/archive_mode = off/g' /pgdata/postgresql.conf
+sed -i 's/max_wal_senders = 1/#max_wal_senders = 0/g' /pgdata/postgresql.conf
+echo "standby_mode = 'on'" > /pgdata/recovery.conf
+echo "primary_conninfo = 'host=$MASTER_HOST user=repuser keepalives_idle=8'" >> /pgdata/recovery.conf
+echo "trigger_file = '/tmp/postgresql.trigger.5432'" >> /pgdata/recovery.conf
+echo "recovery_end_command = '/etc/init.d/cron start'" >> /pgdata/recovery.conf
+mkdir /pgdata/pg_xlog
+/usr/lib/postgresql/9.1/bin/pg_ctl start -D /pgdata
+psql -c "CREATE USER repuser
+             SUPERUSER
+             LOGIN
+             CONNECTION LIMIT 1
+             ENCRYPTED PASSWORD 'pwoqI*8';"
+             
+--------------------------------------------------------
+7. Run this command on Master
+--------------------------------------------------------
+
+psql -c "select pg_stop_backup(), current_timestamp"
+
+
+
+
