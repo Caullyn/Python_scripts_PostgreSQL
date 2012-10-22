@@ -1,0 +1,10 @@
+
+# Vacuum tables to prevent Autovacuum
+0 08,00 * * * python /pgjob/vacuum.py >> /pglog/job/vacuum.log
+
+# Nightly full backup
+0 09 * * * python /pgjob/backup.py > /pglog/bak.log
+
+# Delete backups over 4 days old 
+0 14 * * * find /pgbackup/ehr* -mtime -4 -exec rm {} \;
+
