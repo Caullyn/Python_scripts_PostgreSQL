@@ -1,14 +1,14 @@
 BEGIN;
 
-    CREATE SCHEMA user;    
-    CREATE TABLE user.user_type (
+    CREATE SCHEMA abuser;    
+    CREATE TABLE abuser.user_type (
 				utp_id BIGSERIAL,
 				utp_display_name VARCHAR(64)
 				);
-	INSERT INTO user.user_type VALUES (DEFAULT, 'Normal');
-	INSERT INTO user.user_type VALUES (DEFAULT, 'Traveller');
+	INSERT INTO abuser.user_type VALUES (DEFAULT, 'Normal');
+	INSERT INTO abuser.user_type VALUES (DEFAULT, 'Traveller');
 	
-    CREATE TABLE user.user_pass (
+    CREATE TABLE abuser.user_pass (
                 usr_id BIGINT PRIMARY KEY, 
                 usr_email VARCHAR(255) UNIQUE, 
                 usr_salt VARCHAR(124), 
