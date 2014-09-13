@@ -1,7 +1,6 @@
 CREATE OR REPLACE FUNCTION abuser.usp_abuser_add_update(
-    i_asr_email VARCHAR(255),
-    i_asr_salt VARCHAR(124), 
-    i_asr_hash VARCHAR(124)
+    i_asr_email TEXT,
+    i_asr_pass TEXT
 )
 RETURNS RECORD
 LANGUAGE plpgsql
@@ -14,7 +13,7 @@ BEGIN
 
     UPDATE abuser.abuser
        SET asr_salt = i_asr_salt,
-           asr_hash = i_asr_hash,
+           asr_pass = i_asr_pass,
            asr_modified = now()
      WHERE asr_email = i_asr_email
  RETURNING asr_id INTO _asr_id;
