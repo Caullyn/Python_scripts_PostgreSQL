@@ -2,6 +2,7 @@ BEGIN;
 
     CREATE SCHEMA abuser;
     CREATE SCHEMA collection;
+    CREATE SCHEMA geo;
     -- 
 --     CREATE TABLE collection.type(
 --         typ_id BIGSERIAL PRIMARY KEY,
@@ -38,7 +39,7 @@ BEGIN;
         );
     
     CREATE TABLE geo.geo_location (
-        geo_id BIGSERIAL,
+        geo_id BIGSERIAL PRIMARY KEY,
         geo_description TEXT,
         geo_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         geo_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION abuser._usp_abuser_pass_check(
-    i_asr_id BIGINT
+    i_asr_id BIGINT,
     i_email TEXT,
     i_pass TEXT
 )
@@ -21,13 +21,13 @@ BEGIN
      WHERE asr.asr_email = i_asr_email;
      
     IF asr_password = digest(_salt||i_pass||i_asr_id, "sha256") THEN
-        _status = 200;
-        _status_desc = 'Abuser Authenticated.'
+        _status_id = 200;
+        _status_desc = 'Abuser Authenticated.';
     ELSE
-        _status = 400;
-        _status_desc = 'Abuser Authentication Failed.'
+        _status_id = 400;
+        _status_desc = 'Abuser Authentication Failed.';
     END IF;    
     
-    RETURN _status, _status_desc;
+    RETURN _status_id, _status_desc;
 END;
 $$;

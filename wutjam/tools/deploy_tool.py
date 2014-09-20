@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # 
-# |~\ _|)| _ |_|   |)| _ |_|
-# |_/}_| |(_) _|   | |(_) _|
+# |~\ _|)| _ |_|   
+# |_/}_| |(_) _|   
 #                                                                                                     
 #
 # This script deploys version migrations to Databases.
-# Format: python deploy_ploy.py <hostname> <db_name> <user_name>
+# Format: python deploy_tool.py <hostname> <db_name> <user_name>
 #
 #
 ############################################################################################################
@@ -110,19 +110,19 @@ def roll_on_grants():
     global host, port, db_name, user_name, inst_rank, init_rank
     scripts = ['']
     if (target>0 or game>0) and inst_rank != init_rank: # and db_name  == 'odobo_cloud'
-        scripts = ['../../scripts/permissions/cloud_grant/pilot.sql']
+        scripts = ['../scripts/permissions/cloud_grant/pilot.sql']
         print chr(10)+'---------------------    Working on permissions for CLOUD DataBase   ---------------------'+chr(10)
     if op_target>0 and inst_rank != init_rank: #db_name  == 'operator_cloud':
-        scripts = ['../../scripts/permissions/operator_grant/step1.sql','../../scripts/permissions/operator_grant/step2.sql']
+        scripts = ['../scripts/permissions/operator_grant/step1.sql','../scripts/permissions/operator_grant/step2.sql']
         print chr(10)+'---------------------    Working on permissions for OPERATOR DataBase   ---------------------'+chr(10)
     if loc_target>0 and inst_rank != init_rank: #db_name  == 'operator_cloud':
-        scripts = ['../../scripts/permissions/localisation_grant/step1.sql','../../scripts/permissions/localisation_grant/step2.sql']
+        scripts = ['../scripts/permissions/localisation_grant/step1.sql','../scripts/permissions/localisation_grant/step2.sql']
         print chr(10)+'---------------------    Working on permissions for LOCALISATION DataBase   ---------------------'+chr(10)
     if fin_target>0 and inst_rank != init_rank: #db_name  == 'operator_cloud':
-        scripts = ['../../scripts/permissions/finance_grant/grants.sql']
+        scripts = ['../scripts/permissions/finance_grant/grants.sql']
         print chr(10)+'---------------------    Working on permissions for FINANCE DataBase   ---------------------'+chr(10)
     if wallet_target>0 and inst_rank != init_rank: #db_name  == 'operator_cloud':
-        scripts = ['../../scripts/permissions/wallet_grant/step1.sql','../../scripts/permissions/wallet_grant/step2.sql']
+        scripts = ['../scripts/permissions/wallet_grant/step1.sql','../scripts/permissions/wallet_grant/step2.sql']
         print chr(10)+'---------------------    Working on permissions for WALLET DataBase   ---------------------'+chr(10)
     if not game_target>0:
         for i in scripts:
@@ -140,7 +140,7 @@ def direction(dirname):
     if Para in Donde:
         Strpos = Donde.find(Para) + len(Para)
         Pwd = Donde[:Strpos]
-        DirectoryStructure  = {'tools': 'tools/', 'versions':'versions/', 'pythetic_fail':'scripts/replication/pythetic_fail/', 'deploy_ploy':'tools/deploy_ploy/', 'deploy_\s':'tools/deploy_ploy/log/', 'games/game_100':'games/game_100/'} 
+        DirectoryStructure  = {'tools': 'tools/', 'versions':'versions/', 'pythetic_fail':'scripts/replication/pythetic_fail/', 'deploy_tool':'tools/deploy_tool/', 'deploy_\s':'tools/deploy_tool/log/', 'games/game_100':'games/game_100/'} 
         return Pwd + '/' + DirectoryStructure[dirname]
     else:
         print Para+' not found in CWD, you should be inside to avoid mistake in detecting working directories ...'
@@ -215,7 +215,7 @@ def init():
             mig, ver_rank, inst_rank = mig_tup.split("|")[0], mig_tup.split("|")[1], mig_tup.split("|")[2]
             init_rank   =   inst_rank
             #mig_file = local("ls "+direction('versions')+"/V%(m)s__*" % {"m": int(mig), "d": dir}, capture=True)
-            mig_file = local("ls ../../%(d)s/V%(m)s__*" % {"m": int(mig), "d": dir}, capture=True)
+            mig_file = local("ls ../%(d)s/V%(m)s__*" % {"m": int(mig), "d": dir}, capture=True)
         else:
             print 'Error determining version from table: %(t)s' % {"t": table}
             sys.exit(-1)
@@ -244,8 +244,8 @@ def deploy():
     else:
         t = 999
     if t < im:
-        print ' |~\ _|)| _ |_|   |)| _ |_| '
-        print ' |_/}_| |(_) _|   | |(_) _| '
+        print ' |~\ _|)| _ |_|'
+        print ' |_/}_| |(_) _|'
         print 'ERROR: target must be greater than current versions. %(t)s < %(m)s' % {"t": t, "m": im}
         parser.print_help()
         exit(-1)
@@ -258,7 +258,7 @@ def deploy():
         inst_rank = str(int(inst_rank) + 1)
         mig = im
         with settings(warn_only=True):     
-            mig_file = local("ls ../../%(d)s/V%(m)s__*" % {"m": im, "d": dir}, capture=True)
+            mig_file = local("ls ../%(d)s/V%(m)s__*" % {"m": im, "d": dir}, capture=True)
             mig_file = mig_file
             highlight_version = '\033[0;32;40m' + re.sub(r'V([0-9]{1,})__', r'V\033[0;31;40m\1\033[0m\033[0;32;40m__', mig_file) + '\033[0m '
             print highlight_version
@@ -270,8 +270,8 @@ def deploy():
             print deploy_op
             print deploy_op.stderr;
             if "ERROR" in deploy_op or "ROLLBACK" in deploy_op:
-                print ' |~\ _|)| _ |_|   |)| _ |_| '
-                print ' |_/}_| |(_) _|   | |(_) _| '
+                print ' |~\ _|)| _ |_|'
+                print ' |_/}_| |(_) _|'
                 print 'ERROR or ROLLBACK from psql detected. exiting.'
                 success = False
                 update_schema_version()
@@ -334,20 +334,20 @@ try:
     db_name = "{0}".format(args[0])
     user_name = "{0}".format(args[1])
 except:
-    print ' |~\ _|)| _ |_|   |)| _ |_| '
-    print ' |_/}_| |(_) _|   | |(_) _| '
+    print ' |~\ _|)| _ |_|'
+    print ' |_/}_| |(_) _|'
     print 'ERROR: arguments missing'
     parser.print_help()
     exit(-1)
 if (target == 0 or not target) and (game == 0 or not game) and (op_target == 0 or not op_target) and (wallet_target == 0 or not wallet_target) and (loc_target == 0 or not loc_target) and (fin_target == 0 or not fin_target):
-    print ' |~\ _|)| _ |_|   |)| _ |_| '
-    print ' |_/}_| |(_) _|   | |(_) _| '
+    print ' |~\ _|)| _ |_|'
+    print ' |_/}_| |(_) _|'
     print 'ERROR: target or game must be assigned'
     parser.print_help()
     exit(-1)
 elif ( target > 0 and game > 0 ) or ( op_target > 0 and game > 0 ) or ( target > 0 and op_target > 0 ):
-    print ' |~\ _|)| _ |_|   |)| _ |_| '
-    print ' |_/}_| |(_) _|   | |(_) _| '
+    print ' |~\ _|)| _ |_|'
+    print ' |_/}_| |(_) _|'
     print 'ERROR: Please only specify target, op_target or game individually, not both.'
     parser.print_help()
     exit(-1)
