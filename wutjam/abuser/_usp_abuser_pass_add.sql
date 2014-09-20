@@ -1,8 +1,10 @@
-CREATE OR REPLACE FUNCTION abuser._usp_abuser_pass_check(
+CREATE OR REPLACE FUNCTION abuser._usp_abuser_pass_add(
     i_email TEXT,
+    i_geo_id TEXT,
     i_pass TEXT
 )
 RETURNS TABLE(
+    pass TEXT,
     status INT,
     status_desc TEXT
 )
@@ -17,11 +19,10 @@ DECLARE
     _auth bytea;
 BEGIN
 
-    SELECT asr.asr_id, sal_salt, asr_password
-      INTO _asr_id, _salt, _pass
+    SELECT sal_salt
+      INTO _salt
       FROM abuser.salt sal
-      JOIN abuser.abuser asr ON asr.asr_geo_id = sal.sal_geo_id
-     WHERE asr.asr_email = i_email;
+     WHERE sal.sal_geo_id = i_geo_id;
     
     _auth = digest(_salt||i_pass||_asr_id::text, 'sha256');
     

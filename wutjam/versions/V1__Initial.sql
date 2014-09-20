@@ -3,6 +3,7 @@ BEGIN;
     CREATE SCHEMA abuser;
     CREATE SCHEMA collection;
     CREATE SCHEMA geo;
+    CREATE EXTENSION pgcrypto;
     -- 
 --     CREATE TABLE collection.type(
 --         typ_id BIGSERIAL PRIMARY KEY,
@@ -38,6 +39,15 @@ BEGIN;
         ast_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
     
+    INSERT INTO abuser.abuser_type 
+    VALUES (DEFAULT, 'One Location', DEFAULT, DEFAULT);
+    
+    INSERT INTO abuser.abuser_type 
+    VALUES (DEFAULT, 'Two Locations', DEFAULT, DEFAULT);
+    
+    INSERT INTO abuser.abuser_type 
+    VALUES (DEFAULT, 'More Locations', DEFAULT, DEFAULT);
+    
     CREATE TABLE geo.geo_location (
         geo_id BIGSERIAL PRIMARY KEY,
         geo_description TEXT,
@@ -45,6 +55,12 @@ BEGIN;
         geo_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
         
+    INSERT INTO geo.geo_location
+    VALUES (DEFAULT, 'North America', DEFAULT, DEFAULT);
+    
+    INSERT INTO geo.geo_location
+    VALUES (DEFAULT, 'Europe', DEFAULT, DEFAULT);
+    
     CREATE TABLE abuser.salt (
         sal_id BIGSERIAL PRIMARY KEY,
         sal_salt TEXT NOT NULL,
