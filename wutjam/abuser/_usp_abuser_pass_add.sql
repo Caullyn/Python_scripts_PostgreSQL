@@ -24,16 +24,16 @@ BEGIN
           INTO _salt
           FROM abuser.salt sal
          WHERE sal.sal_geo_id = i_geo_id;
-    
-        _auth = digest(_salt||i_pass||i_email::text, 'sha256');
-        RAISE NOTICE '%', _auth;
-        RAISE NOTICE '%', i_pass;
-        RAISE NOTICE '%', _salt;
-        RAISE NOTICE '%', i_email;
-        _status_id = 200;
-        _status_desc = 'Abuser Authenticated.';
+        IF _salt IS NOT NULL THEN
+            _auth = digest(_salt||i_pass||i_email::text, 'sha256');
+            _status_id = 200;
+            _status_desc = 'Abuser Authenticated.';
+        ELSE
+            _status_id = 400;
+            _status_desc = 'Abuser Salt or Geo Location Does Not Exist.';
+        END IF;
     ELSE
-        _status_id = 400;
+        _status_id = 401;
         _status_desc = 'Abuser Password Too Short.';
     END IF;    
     

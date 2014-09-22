@@ -15,19 +15,15 @@ DECLARE
     _status_desc TEXT;
     _pass TEXT;
 BEGIN
-
-
     SELECT asr_id
       INTO _asr_id
       FROM abuser.abuser
      WHERE asr_email = i_asr_email;
     
     IF _asr_id IS NOT NULL THEN
-    
         SELECT apc.status_id, apc.status_desc
           FROM abuser._usp_abuser_pass_check(i_asr_email, i_asr_pass) apc
-          INTO _status_id, _status_desc;
-          
+          INTO _status_id, _status_desc;  
         IF _status_id = 200 THEN
             UPDATE abuser.abuser
                SET asr_modified = now()
