@@ -54,6 +54,8 @@ BEGIN;
         
     CREATE TABLE band.band (
         ban_id BIGSERIAL PRIMARY KEY,
+        ban_asr_id BIGINT REFERENCES abuser.abuser(asr_id) NOT NULL,
+        ban_geo_id BIGINT REFERENCES geo.geo_location(geo_id) NOT NULL,
         ban_email TEXT UNIQUE NOT NULL,
         ban_description TEXT NOT NULL,
         ban_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
@@ -67,10 +69,9 @@ BEGIN;
         big_description TEXT NOT NULL,
         big_image BYTEA
         );
-        
+         
     CREATE TABLE event.event (
         evt_id BIGSERIAL PRIMARY KEY,
-        evt_ban_id BIGINT REFERENCES band.band(ban_id) NOT NULL,
         evt_name TEXT NOT NULL,
         evt_description TEXT,
         evt_start TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -78,5 +79,13 @@ BEGIN;
         evt_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         evt_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
-        
+    
+    CREATE TABLE event.event_band(
+        evb_id BIGSERIAL PRIMARY KEY,
+        evb_ban_id BIGINT REFERENCES band.band(ban_id) NOT NULL,
+        evb_evt_id BIGINT REFERENCES event.event(evt_id) NOT NULL
+        );
+    
+    CREATE UNIQUE INDEX uqc_event_band ON event.event_band(evb_ban_id, evb_evt_id);
+    
 COMMIT;
