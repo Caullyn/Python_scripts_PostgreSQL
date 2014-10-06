@@ -36,7 +36,6 @@ BEGIN
         SELECT apa.pass, apa.status_id, apa.status_desc
           FROM abuser._usp_abuser_pass_add(i_asr_email, i_geo_id, i_asr_pass) apa
           INTO _pass, _status_id, _status_desc;
-        RAISE NOTICE '%', _pass;
         IF _status_id = 200 THEN            
             INSERT INTO abuser.abuser (asr_email, asr_password, asr_geo_id)
             VALUES (i_asr_email, _pass, i_geo_id);

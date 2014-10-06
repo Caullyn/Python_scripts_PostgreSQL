@@ -56,6 +56,7 @@ BEGIN;
         ban_id BIGSERIAL PRIMARY KEY,
         ban_asr_id BIGINT REFERENCES abuser.abuser(asr_id) NOT NULL,
         ban_geo_id BIGINT REFERENCES geo.geo_location(geo_id) NOT NULL,
+        ban_name TEXT UNIQUE NOT NULL,
         ban_email TEXT UNIQUE NOT NULL,
         ban_description TEXT NOT NULL,
         ban_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
@@ -72,10 +73,12 @@ BEGIN;
          
     CREATE TABLE event.event (
         evt_id BIGSERIAL PRIMARY KEY,
+        evt_asr_id BIGINT REFERENCES abuser.abuser(asr_id),
         evt_name TEXT NOT NULL,
         evt_description TEXT,
         evt_start TIMESTAMP WITH TIME ZONE NOT NULL,
         evt_end TIMESTAMP WITH TIME ZONE,
+        evt_geo_id BIGINT REFERENCES geo.geo_location (geo_id) NOT NULL,
         evt_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         evt_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
@@ -88,4 +91,6 @@ BEGIN;
     
     CREATE UNIQUE INDEX uqc_event_band ON event.event_band(evb_ban_id, evb_evt_id);
     
+    insert into abuser.salt values (DEFAULT, 'gfruc5', 1);
+    insert into abuser.salt values (DEFAULT, 'gfcur5', 2);
 COMMIT;

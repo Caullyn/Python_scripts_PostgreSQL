@@ -1,10 +1,12 @@
 CREATE OR REPLACE FUNCTION abuser.usp_event_add_update(
-    i_evt_name TEXT NOT NULL,
-    i_evt_description TEXT NOT NULL,
-    i_evt_start TIMESTAMP WITH TIME ZONE NOT NULL,
-    i_evt_end TIMESTAMP WITH TIME ZONE NOT NULL,
-    i_band TEXT,
-    i_geo_id BIGINT
+    i_asr_email TEXT,
+    i_evt_name TEXT,
+    i_evt_description TEXT,
+    i_evt_start TIMESTAMP WITH TIME ZONE,
+    i_evt_end TIMESTAMP WITH TIME ZONE,
+    i_evt_id BIGINT,
+    i_evt_geo_id BIGINT,
+    i_band TEXT
 )
 RETURNS TABLE(
     status_id INT,
@@ -14,29 +16,33 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     _asr_id BIGINT;
-    _ban_id TEXT;
+    _evt_id TEXT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
 BEGIN
 
-    SELECT ban_id 
-      FROM band.band
-     WHERE ban_email = i_ban_email
-      INTO _ban_id;
-    IF _ban_id IS NOT NULL THEN
-        INSERT INTO event.event (ban_asr_id, ban_email, ban_description)
-        VALUES (_asr_id, i_ban_email, i_ban_description, DEFAULT)
-        RETURNING ban_id INTO _ban_id;
-        _status_id = 203;
-        _status_desc = 'ban_id % inserted.' % _ban_id;
+    SELECT asr_id
+      FROM abuser.abuser
+     WHERE asr_email = i_asr_email
+      INTO _asr_id;
+      
+    IF i_evt_id IS NOT NULL THEN 
+        UPDATE event.event 
+           SET evt_description = i_evt_description,
+               evt_name = i_evt_name,
+               evt_start = i_evt_start,
+               evt_end = i_evt_end,
+               evt_modified = now()
+         WHERE evt_id = i_evt_id;
+        _status_id = 205;
+        _status_desc = 'evt_id updated: ' || i_evt_id::text;
     ELSE
-        UPDATE band.band 
-           SET ban_description = i_ban_description,
-               ban_geo_id = i_geo_id
-         WHERE ban_email = i_ban_email;
-        _status_id = 202;
-        _status_desc = 'ban_id % updated.' % _ban_id;
+        INSERT INTO event.event (evt_asr_id, evt_name, evt_description, evt_start, evt_end, evt_geo_id)
+        VALUES (_asr_id, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id)
+        RETURNING evt_id INTO _evt_id;
+        _status_id = 206;
+        _status_desc = 'evt_id inserted: ' || _evt_id::text;
     END IF;
     RETURN QUERY SELECT _status_id, _status_desc;
 END;
