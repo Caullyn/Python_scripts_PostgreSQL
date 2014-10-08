@@ -1,7 +1,7 @@
 var config = {
   db:{
     host:"localhost",
-    database:"wotjam",
+    database:"fullyawesome",
     username:"postgres",
     password:""
   },

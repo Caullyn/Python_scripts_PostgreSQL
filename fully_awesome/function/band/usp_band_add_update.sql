@@ -35,17 +35,17 @@ BEGIN
                    ban_geo_id = i_geo_id,
                    ban_modified = now()
              WHERE ban_email = i_ban_email;
-            _status_id = 202;
+            _status_id = 200;
             _status_desc = 'ban_id updated: ' || _ban_id::text;
         ELSE
             INSERT INTO band.band (ban_asr_id, ban_name, ban_email, ban_description, ban_geo_id)
             VALUES (_asr_id, i_ban_name, i_ban_email, i_ban_description, i_geo_id)
             RETURNING ban_id INTO _ban_id;
-            _status_id = 203;
+            _status_id = 200;
             _status_desc = 'ban_id inserted: ' ||  _ban_id::text;
         END IF;
     ELSE
-        _status_id = 204;
+        _status_id = 402;
         _status_desc = 'User does not exist.';
     END IF;
     RETURN QUERY SELECT _status_id, _status_desc;
