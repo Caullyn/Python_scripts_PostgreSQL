@@ -35,13 +35,13 @@ BEGIN
                evt_end = i_evt_end,
                evt_modified = now()
          WHERE evt_id = i_evt_id;
-        _status_id = 205;
+        _status_id = 200;
         _status_desc = 'evt_id updated: ' || i_evt_id::text;
     ELSE
         INSERT INTO event.event (evt_asr_id, evt_name, evt_description, evt_start, evt_end, evt_geo_id)
         VALUES (_asr_id, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id)
         RETURNING evt_id INTO _evt_id;
-        _status_id = 206;
+        _status_id = 200;
         _status_desc = 'evt_id inserted: ' || _evt_id::text;
     END IF;
     RETURN QUERY SELECT _status_id, _status_desc;

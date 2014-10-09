@@ -29,7 +29,7 @@ BEGIN
                SET asr_modified = now()
              WHERE asr_email = i_asr_email
          RETURNING asr_id INTO _asr_id;
-            _status_id = 201;
+            _status_id = 200;
             _status_desc = 'Abuser Updated.';
         END IF;
     ELSE
