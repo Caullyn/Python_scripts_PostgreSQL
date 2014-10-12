@@ -159,6 +159,38 @@ app.get('/api/login', function (req, res){
 	});
 });
 
+
+// Add Update User
+
+app.get('/api/abuser_add_update', function (req, res){
+	var dbWrapper = new DBWrapper('pg', dbConnectionConfig);
+	var result_array;
+	dbWrapper.connect();
+
+    query_string = 'SELECT status_id, status_desc \
+                      FROM abuser.usp_abuser_add_update( \
+                       $$' + req.param("email") + '$$, \
+                       $$' + req.param("pw") + '$$);'
+						 
+	dbWrapper.fetchAll(query_string, null, function (err, result) {
+	  if (!err) {
+		console.log(" %s", query_string);
+		console.log( result)
+	    res.header('Access-Control-Allow-Origin', "*")
+		res.send(result );
+	  } else {
+		console.log("DB returned an error: %s", err);
+		console.log(" %s", query_string);
+	  }
+
+	  dbWrapper.close(function (close_err) {
+		if (close_err) {
+		  console.log("Error while disconnecting: %s", close_err);
+		}
+	  });
+	});
+});
+
 // start and end dates 
 
 app.get('/api/dates', function (req, res){

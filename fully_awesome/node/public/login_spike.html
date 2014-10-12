@@ -50,50 +50,12 @@
  
 <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <style></style>
-	<script type="text/javascript">
+    <script type="text/javascript">
+        var clean_uri = location.protocol + "//" + location.host + location.pathname;
+        window.history.replaceState({}, document.title, clean_uri);
+    </script>
+ 
 
-    $(function() {
-		var api_url = 'http://localhost:4242/api/';
-		var aau = [];
-		var apc = [];
-		
-         function aau(email, pw) {
-            $.ajax({
-                async: false,
-                url: api_url + 'login?email=' + email + '&pw=' + pw ,
-                type: "GET",
-                dataType: 'JSON',
-                error: function(req, err){ console.log('login: ' + err)},
-                success: 
-                    function (series){
-                        aau = eval(series);
-                        
-                        console.log(api_url + 'login?email=' + email + '&pw=' + pw);
-                        console.log(aau);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Error: ' + error.message);
-                        $('#lblResponse').html('Error connecting to the server.');
-                    },
-                    
-             }
-            });	
-
-         function apc(email, pw) {
-             $.ajax({
-                 async: false,
-                 url: api_url + 'abuser_add_update?email=' + email + '&pw=' + pw ,
-                 type: "GET",
-                 dataType: 'JSON',
-                 error: function(req, err){ console.log('abuser_add_update: ' + err)},
-                 success: 
-                     function (series){
-                         apc = eval(series);                        
-                         console.log(apc);
-                     },
-             })};
- 	});
-	</script>	
     </head>
     <body>
 
@@ -101,15 +63,25 @@
         <form name="login" accept-charset="utf-8">
         <ul>  
             <li><label for="usermail">Email</label>  
-            <input type="email" name="email" placeholder="yourname@email.com" required></li>  
+            <input type="email" id="email" name="email" placeholder="yourname@email.com" required></li>  
             <li><label for="password">Password</label>  
-            <input type="password" name="pw" placeholder="password" required></li>  
+            <input type="password" id="pw" name="pw" placeholder="password" required></li>  
             <li>  
-            <input type="submit" value="Login" onclick="aau(email,pw)">
-            <input type="submit" value="Sign Up" onclick="apc(email,pw)"></li> </li>  
+            <input type="submit" id="login" value="Log In">
+            <input type="submit" id="signup" value="Sign Up"></li> </li>  
         </ul>  
         </form>  
         </section>  
+
+
+<!-- 
+
+<form id="myform" name="myform">
+  <input id="name" type="text" name="name" placeholder="Name"><br>
+  <input id="email" type="email" name="email" placeholder="Email"><br>
+  <input type="button" value="Save">
+</form>
+ -->
 
         <script src="js/vendor/jquery-2.1.0.min.js"></script>
         <script src="js/helper.js"></script>
@@ -126,5 +98,45 @@
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
  -->
+ 	<script type="text/javascript">
+$(document).ready( function() {
+		var api_url = 'http://localhost:4242/api/';
+		var aau_ser = [];
+		var apc_ser = [];
+		
+         function aau() {
+            var email = document.getElementById("email").value;
+            var pw = document.getElementById("pw").value;
+            $.ajax({
+                async: false,
+                url: api_url + 'login?email=' + email + '&pw=' + pw ,
+                type: "GET",
+                dataType: 'JSON',
+                error: function(req, err){ console.log('login: ' + err)},
+                success: 
+                    function (series){
+                        aau_ser = eval(series);
+                    },
+                    
+             })};
+
+         function apc(email, pw) {
+            var email = document.getElementById("email").value;
+            var pw = document.getElementById("pw").value;
+             $.ajax({
+                 async: false,
+                 url: api_url + 'abuser_add_update?email=' + email + '&pw=' + pw ,
+                 type: "GET",
+                 dataType: 'JSON',
+                 success: 
+                     function (series){
+                         apc = eval(series);  
+                         window.location.href = 'event.html';
+                     },
+             })};
+    $( "#login" ).click(aau);
+    $( "#signup" ).click(apc);
+});
+</script>
     </body>
 </html>
