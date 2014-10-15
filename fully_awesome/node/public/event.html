@@ -47,9 +47,13 @@
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.7.1.min.js"></script>
  -->
- 
+
+
+<link rel="stylesheet" href="css/bw.css">
+        
 <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <style></style>
+<style>
+</style>
     <script type="text/javascript">
         var clean_uri = location.protocol + "//" + location.host + location.pathname;
         window.history.replaceState({}, document.title, clean_uri);
@@ -58,21 +62,31 @@
 
     </head>
     <body>
+<div id="header">
+    <h1>Fully Awesome</h1>
+    
+<!--     <img src="img/logo/fullyawesome_profilepic3.png" alt="Fully Awesome"> -->
 
-        <section class="loginform cf">
-        <form name="login" accept-charset="utf-8">
-        <ul>  
-            <li><label for="usermail">Email</label>  
-            <input type="email" id="email" name="email" placeholder="yourname@email.com" required></li>  
-            <li><label for="password">Password</label>  
-            <input type="password" id="pw" name="pw" placeholder="password" required></li>  
-            <li>  
-            <input type="submit" id="login" value="Log In">
-            <input type="submit" id="signup" value="Sign Up"></li> </li>  
-        </ul>  
-        </form>  
-        </section>  
+</div>
 
+<div id="section">
+    <section class="loginform cf">
+    <form name="login" accept-charset="utf-8">
+    <table>
+        <tr><td>
+        <label for="usermail">Email</label></td>
+        <td><input type="email" id="email" name="email" placeholder="yourname@email.com" required>  
+        </td></tr><tr><td>
+        <label for="password">Password</label></td>
+        <td><input type="password" id="pw" name="pw" placeholder="password" required>    
+        </td></tr><tr><td>
+        <input type="submit" id="login" value="Log In"></td>
+        <td><input type="submit" id="signup" value="Sign Up">   
+        </td></tr>
+    <table>
+    </form>  
+    </section>  
+</div>
 
 <!-- 
 
@@ -99,12 +113,13 @@
         </script>
  -->
  	<script type="text/javascript">
+
 $(document).ready( function() {
 		var api_url = 'http://localhost:4242/api/';
 		var aau_ser = [];
 		var apc_ser = [];
-		
-         function aau() {
+
+        function aau() {
             var email = document.getElementById("email").value;
             var pw = document.getElementById("pw").value;
             $.ajax({
@@ -117,10 +132,18 @@ $(document).ready( function() {
                     function (series){
                         aau_ser = eval(series);
                     },
-                    
-             })};
+                 
+            });
+            if (aau_ser[0]["status_id"] > 200) {                
+                alert(aau_ser[0]["status_desc"]); 
+            } else {
+                window.location.assign("event.html");
+            };
+            return false;
+            };
+            
 
-         function apc(email, pw) {
+        function apc(email, pw) {
             var email = document.getElementById("email").value;
             var pw = document.getElementById("pw").value;
              $.ajax({
@@ -131,9 +154,16 @@ $(document).ready( function() {
                  success: 
                      function (series){
                          apc = eval(series);  
-                         window.location.href = 'event.html';
                      },
-             })};
+             });            
+            if (apc_ser[0]["status_id"] > 200) {                
+                alert(apc_ser[0]["status_desc"]); 
+            } else {
+                window.location.assign("event.html");
+            };
+            return false;
+            };
+
     $( "#login" ).click(aau);
     $( "#signup" ).click(apc);
 });
