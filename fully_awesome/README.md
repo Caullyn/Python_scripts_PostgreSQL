@@ -12,6 +12,9 @@ Deploy DB functions
     sh deploy.sh 
 
 Run nodeJS api and http-server
+
     cd node/
     node api.js
     http-server 
+
+Open http://localhost:8080/login.html in browser
