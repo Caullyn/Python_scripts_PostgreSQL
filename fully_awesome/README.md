@@ -11,7 +11,7 @@ Deploy DB functions
     cd tools/
     sh deploy.sh 
 
-Run nodeJS api and http-server (http-server may be required)
+Run nodeJS api and http-server
     cd node/
     node api.js
     http-server 
