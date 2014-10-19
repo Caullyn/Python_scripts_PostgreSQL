@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION abuser.usp_event_display(
+CREATE OR REPLACE FUNCTION event.usp_event_display(
     i_asr_geo_id BIGINT,
     i_band TEXT
 )
@@ -20,9 +20,10 @@ BEGIN
     _status_id = 200;
     _status_desc = 'events returned: 15';
     RETURN QUERY 
-    SELECT evt_name, evt_description, evt_start, evt_end, _status_id, _status_desc
-      FROM event.event
-     WHERE (evt_start > now() OR evt_end > now())
+    SELECT evt.evt_name, evt.evt_description, evt.evt_start, evt.evt_end, _status_id, _status_desc
+      FROM event.event evt
+     WHERE (evt.evt_start > now() OR evt.evt_end > now())
+     ORDER BY evt.evt_start, evt_name
      LIMIT 15;
      
 END;

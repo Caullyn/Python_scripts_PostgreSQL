@@ -51,6 +51,7 @@
 
 <link rel="stylesheet" href="css/bw.css">
         
+<script language="Javascript" type="text/javascript" src="http://masonry.desandro.com/masonry.pkgd.min.js"></script>
 <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <style>
 </style>
@@ -69,25 +70,8 @@
 
 </div>
 
-<div id="section">
-    <section class="loginform cf">
-    <form name="login" accept-charset="utf-8">
-    <table>
-        <tr><td>
-        <label for="usermail">Email</label></td>
-        <td><input type="email" id="email" name="email" placeholder="yourname@email.com" required>  
-        </td></tr><tr><td>
-        <label for="password">Password</label></td>
-        <td><input type="password" id="pw" name="pw" placeholder="password" required>    
-        </td></tr><tr><td>
-        <input type="submit" id="login" value="Log In"></td>
-        <td><input type="submit" id="signup" value="Sign Up">   
-        </td></tr>
-    <table>
-    </form>  
-    </section>  
-</div>
-
+<div id="groupTable"> <table> table columns and rows <table></div>
+<div id="container" />
 <!-- 
 
 <form id="myform" name="myform">
@@ -112,60 +96,36 @@
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
  -->
- 	<script type="text/javascript">
-
-$(document).ready( function() {
-		var api_url = 'http://localhost:4242/api/';
-		var aau_ser = [];
-		var apc_ser = [];
-
-        function aau() {
-            var email = document.getElementById("email").value;
-            var pw = document.getElementById("pw").value;
-            $.ajax({
-                async: false,
-                url: api_url + 'login?email=' + email + '&pw=' + pw ,
-                type: "GET",
-                dataType: 'JSON',
-                error: function(req, err){ console.log('login: ' + err)},
-                success: 
-                    function (series){
-                        aau_ser = eval(series);
-                    },
-                 
-            });
-            if (aau_ser[0]["status_id"] > 200) {                
-                alert(aau_ser[0]["status_desc"]); 
-            } else {
-                window.location.assign("event.html");
-            };
-            return false;
-            };
-            
-
-        function apc(email, pw) {
-            var email = document.getElementById("email").value;
-            var pw = document.getElementById("pw").value;
-             $.ajax({
-                 async: false,
-                 url: api_url + 'abuser_add_update?email=' + email + '&pw=' + pw ,
-                 type: "GET",
-                 dataType: 'JSON',
-                 success: 
-                     function (series){
-                         apc = eval(series);  
-                     },
-             });            
-            if (apc_ser[0]["status_id"] > 200) {                
-                alert(apc_ser[0]["status_desc"]); 
-            } else {
-                window.location.assign("event.html");
-            };
-            return false;
-            };
-
-    $( "#login" ).click(aau);
-    $( "#signup" ).click(apc);
+<script type="text/javascript">
+// var api_url = 'http://localhost:4242/api/';
+// $.ajax({
+//             type: "GET",
+//             url: api_url + 'event_display',
+//             dataType: 'JSON',
+// //             data: { groupNames: JSON.stringify(groubyNames), page: JSON.stringify(page) },
+//             success: function(data) {
+//                  var table = $('<table/>');
+//                  $(data).each(function() {
+//                        var row = $('<tr/>');
+//                        row.append('<td>' + this.Value + '</td>');
+//                        row.append('<td>' + this.Value + '</td>');
+//                      table.append(row);   
+//                  });
+//                  $('#groupTable').html(table); // not refreshing table withdata
+//             },
+//             error: function(request, status, error) {
+// 
+//                 alert(request.responseText);
+//             }
+//         });
+$( function() {
+//     var $container = $('#container');
+    // initialize
+    $('#container').masonry({
+      columnWidth: 200,
+      itemSelector: '.item'
+    });
+//     var msnry = $container.data('masonry');
 });
 </script>
     </body>

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION abuser.usp_event_add_update(
+CREATE OR REPLACE FUNCTION event.usp_event_add_update(
     i_asr_email TEXT,
     i_evt_name TEXT,
     i_evt_description TEXT,
