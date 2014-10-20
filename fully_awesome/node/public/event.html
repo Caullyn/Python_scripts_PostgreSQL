@@ -3,130 +3,89 @@
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title></title>
-<!-- 
-        <meta name="description" content="">
-        <meta name="HandheldFriendly" content="True">
-        <meta name="MobileOptimized" content="320">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
-        <meta http-equiv="cleartype" content="on">
-
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
-        <link rel="shortcut icon" sizes="196x196" href="img/touch/touch-icon-196x196.png">
-        <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
-
-        <!~~ Tile icon for Win8 (144x144 + tile color) ~~>
-        <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
-        <meta name="msapplication-TileColor" content="#222222">
-
-        <!~~ SEO: If mobile URL is different from desktop URL, add a canonical link to the desktop page ~~>
-        <!~~
-        <link rel="canonical" href="http://www.example.com/" >
-        ~~>
-
-        <!~~ Add to homescreen for Chrome on Android ~~>
-        <!~~
-        <meta name="mobile-web-app-capable" content="yes">
-        ~~>
-
-        <!~~ For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 ~~>
-        <!~~
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="">
-        ~~>
-
-        <!~~ This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 ~~>
-        <!~~
-        <script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
-        ~~>
-
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.7.1.min.js"></script>
- -->
-
-
-<link rel="stylesheet" href="css/bw.css">
-        
-<script language="Javascript" type="text/javascript" src="http://masonry.desandro.com/masonry.pkgd.min.js"></script>
-<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <link rel="stylesheet" href="css/bw.css">
+        <script src="js/vendor/jquery-2.1.0.min.js"></script>
+        <script src="js/helper.js"></script>
+        <script src="js/main.js"></script>
+    <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <style>
 </style>
     <script type="text/javascript">
         var clean_uri = location.protocol + "//" + location.host + location.pathname;
         window.history.replaceState({}, document.title, clean_uri);
     </script>
- 
-
+     <script src="http://masonry.desandro.com/masonry.pkgd.min.js"></script>
+        <script src="http://desandro.github.io/masonry/js/modernizr-transitions.js"></script>
+    <script src="http://www.pollyformaturas.com.br/js/masonry/box-maker.js"></script>
+       <script type="text/javascript" language="javascript">
+            $('#content').masonry();
+        </script>
     </head>
     <body>
-<div id="header">
-    <h1>Fully Awesome</h1>
-    
-<!--     <img src="img/logo/fullyawesome_profilepic3.png" alt="Fully Awesome"> -->
+    <div id="header">
+        <h1>WotJam</h1>
+    </div>
 
+
+  <section id="content">
+  
+<div id="container" class="transitions-enabled clearfix">
+  <div class="box col2">
+    <p>Sit amet mi ullamcorper vehicula</p>
+  </div>
 </div>
 
-<div id="groupTable"> <table> table columns and rows <table></div>
-<div id="container" />
-<!-- 
 
-<form id="myform" name="myform">
-  <input id="name" type="text" name="name" placeholder="Name"><br>
-  <input id="email" type="email" name="email" placeholder="Email"><br>
-  <input type="button" value="Save">
-</form>
- -->
-
-        <script src="js/vendor/jquery-2.1.0.min.js"></script>
-        <script src="js/helper.js"></script>
-        <script src="js/main.js"></script>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-<!-- 
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
- -->
 <script type="text/javascript">
-// var api_url = 'http://localhost:4242/api/';
-// $.ajax({
-//             type: "GET",
-//             url: api_url + 'event_display',
-//             dataType: 'JSON',
-// //             data: { groupNames: JSON.stringify(groubyNames), page: JSON.stringify(page) },
-//             success: function(data) {
-//                  var table = $('<table/>');
-//                  $(data).each(function() {
-//                        var row = $('<tr/>');
-//                        row.append('<td>' + this.Value + '</td>');
-//                        row.append('<td>' + this.Value + '</td>');
-//                      table.append(row);   
-//                  });
-//                  $('#groupTable').html(table); // not refreshing table withdata
-//             },
-//             error: function(request, status, error) {
-// 
-//                 alert(request.responseText);
-//             }
-//         });
-$( function() {
-//     var $container = $('#container');
-    // initialize
-    $('#container').masonry({
-      columnWidth: 200,
-      itemSelector: '.item'
-    });
-//     var msnry = $container.data('masonry');
-});
-</script>
+ $(document).ready(function () {
+     function listboxes() {
+         var api_url = 'http://localhost:4242/api/';
+         $.ajax({
+             type: "GET",
+             url: api_url + 'event_display',
+             datatype: 'JSON',
+             success: function (data) {
+ 
+                 var jsonArray = data;
+ 
+                 $.each(jsonArray, function (i, box) {
+                     if(data != undefined){
+                         createbox(box.evt_name, box.evt_description, box.evt_start, box.evt_end);
+                     }
+                 });
+             }
+         });
+     };
+     function createbox(evt_id, evt_name, evt_description, evt_start, evt_end) {
+         var boxHtml = "",
+             tagsHtml = "",
+             descriptionHtml = "";
+ 
+         boxHtml = '' + '<div class="box" id="' + evt_id + '">' + '<div class="boxinfo">' + '<label class="boxname"><a href="' + "link" + '" class="boxlink" target="_blank">' + evt_name + '</a></label>';
+ 
+//           $.each(tags, function (i, tag) {
+//               tagsHtml += '<label class="boxtag">' + ((!tag.name) ? tags[i] : tag.name) + '</label>';
+//           });
+ 
+//          if(description.trim().length > 0){
+//          descriptionHtml = '<textarea class="boxdescription" readonly rows="1">' + evt_description + '</textarea>';
+//          }
+ 
+         boxHtml += tagsHtml + '</div>' + descriptionHtml + '</div>';
+         boxHtml += tagsHtml +
+             '</div>' +
+         descriptionHtml +
+         '</div>';
+         var $boxHtml = $(boxHtml);
+//          $('content').append($boxHtml).masonry('appended', $boxHtml);
+         
+         jQuery("#content").append(boxHtml).masonry( 'reload' );
+
+     };
+ 
+     listboxes();
+     $('content').fadeIn();
+ });
+</script> 
     </body>
 </html>
