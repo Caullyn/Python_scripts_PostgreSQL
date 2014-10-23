@@ -3,10 +3,11 @@ CREATE OR REPLACE FUNCTION event.usp_event_display(
     i_band TEXT
 )
 RETURNS TABLE(
+    evt_id BIGINT,
     evt_name TEXT,
     evt_description TEXT,
-    evt_start TIMESTAMP WITH TIME ZONE,
-    evt_end TIMESTAMP WITH TIME ZONE,
+    evt_start TEXT,
+    evt_end TEXT,
     status_id INT,
     status_desc TEXT
 )
@@ -20,7 +21,9 @@ BEGIN
     _status_id = 200;
     _status_desc = 'events returned: 15';
     RETURN QUERY 
-    SELECT evt.evt_name, evt.evt_description, evt.evt_start, evt.evt_end, _status_id, _status_desc
+    SELECT evt.evt_id, evt.evt_name, evt.evt_description, 
+           to_char(evt.evt_start, 'Mon DD HH:MI'), to_char(evt.evt_end, 'Mon DD HH:MI'),
+           _status_id, _status_desc
       FROM event.event evt
      WHERE (evt.evt_start > now() OR evt.evt_end > now())
      ORDER BY evt.evt_start, evt_name

@@ -198,7 +198,7 @@ app.get('/api/event_display', function (req, res){
 	var result_array;
 	dbWrapper.connect();
 
-    query_string = 'SELECT evt_name, evt_description, evt_start \
+    query_string = 'SELECT evt_id, evt_name, evt_description, evt_start \
                       FROM event.usp_event_display(1::bigint,NULL::text);'
 						 
 	dbWrapper.fetchAll(query_string, null, function (err, result) {
