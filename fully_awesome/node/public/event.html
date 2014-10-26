@@ -16,6 +16,7 @@
     </script>
      <script src="http://masonry.desandro.com/masonry.pkgd.min.js"></script>
         <script src="http://desandro.github.io/masonry/js/modernizr-transitions.js"></script>
+        <sript src="https://gist.githubusercontent.com/desandro/797120/raw/c75b3447719c817f8f213fef23eb2836f1518acc/gistfile1.js"></script>
     <script src="http://www.pollyformaturas.com.br/js/masonry/box-maker.js"></script>
        <script type="text/javascript" language="javascript">
             $('#container').masonry();
@@ -36,15 +37,14 @@
 
 <script type="text/javascript">
  $(document).ready(function () {
-     function init() {
-           var $container = $('#container');
     
-            $container.masonry({
-              itemSelector: '.box',
-              columnWidth: 100,
-              isAnimated: !Modernizr.csstransitions
-            });
-    };
+    function imgLoaded() {
+             var containerImg = $( '#container' );
+        imagesLoaded( containerImg, function() {
+  msnry.layout();
+});
+};
+  
      function listboxes() {
          var api_url = 'http://localhost:4242/api/';
          $.ajax({
@@ -60,21 +60,30 @@
                          boxes += createbox(box.evt_id, box.evt_name, box.evt_description, box.evt_start, box.evt_end);
                      }
                  });
+//                  jQuery("#container").append(boxes).masonry( 'appended', boxes );
                  
-                 jQuery("#container").append(boxes).masonry( 'appended', boxes );
+
              }
          });
-     };
+    };
+
      function createbox(evt_id, evt_name, evt_description, evt_start, evt_end) {
          var boxHtml = "",
              tagsHtml = "";
  
          boxHtml = '' + '<div class="box" id="' + evt_id + '">' + '<div class="boxinfo">' + '<label class="boxname"><a href="' + "link" + '" class="boxlink" target="_blank">' + evt_name + '</a></label><p>' + evt_description + '</p><p>' + evt_start + '</p></div></div>';
          var $boxHtml = $(boxHtml);
-         return boxHtml;
+         var containerSizer = $( '#container' );
+        containerSizer.masonry( {
+            columnWidth:  210,
+            itemSelector: '.box'
+        } );
+        $( containerSizer ).prepend( boxHtml );
+        $( containerSizer ).masonry( 'reloadItems' );
+        $( containerSizer ).masonry( 'layout' );
      };
-     init();
      listboxes();
+
      $('content').fadeIn();
  });
 </script> 

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title></title>
+<link rel="stylesheet" href="css/bw.css">
+        
+<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<style>
+</style>
+    <script type="text/javascript">
+        var clean_uri = location.protocol + "//" + location.host + location.pathname;
+        window.history.replaceState({}, document.title, clean_uri);
+    </script>
+ 
+
+    </head>
+    <body>
+<div id="header">
+    <h1>WotJam</h1>
+
+</div>
+
+<div id="section">
+    <section class="loginform cf">
+    <form name="login" accept-charset="utf-8">
+    <table>
+        <tr><td>
+        <label for="usereventname">Name</label></td>
+        <td><input type="text" id="eventname" name="Name" placeholder="Event Name here." required>  
+        </td></tr><tr><td>
+        <label for="usereventdesc">Name</label></td>
+        <td><input type="text" id="description" name="Description" size="200" placeholder="Event Description here." required>  
+        </td></tr>
+    <table>
+    </form>
+    <div id="upload-global" class="popup">
+    <form method="post" id="upload-global-form" enctype="multipart/form-data" action="https://imgur.com/upload">
+        
+
+        <div id="upload-global-buttons">
+
+            <div id="upload-global-file-wrapper">
+                <span class="computerIcon"></span>
+                <span class="green">browse</span> your computer
+
+                <input accept="image/*" type="file" name="Filedata" multiple="multiple" id="upload-global-file">
+            </div>
+
+            <div class="left">
+                <div id="upload-global-url">
+                    <span class="webIcon"></span>
+                    <textarea id="upload-global-link-input" class="placeholder-onkeydown" title="enter URLs to upload from web" placeholder="enter URLs to upload from web" rows="1"></textarea>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+           <div id="upload-global-start-upload">
+            <div class="panel">
+                <div>
+
+                    <table id="upload-global-actions">
+                        <tbody>
+                            <tr>
+                                <td width="49.6%">
+                                    <button type="button" id="upload-global-start-button" class="button-big green" type="submit">
+                                        <span class="start-btn-icon"></span>
+                                        Start Upload
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr><td> Supported formats: JPEG, GIF, PNG, APNG, TIFF, BMP, PDF, XCF </td></tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                
+
+
+    
+ 
+    </form>  
+    </div>
+    </section>  
+</div>
+
+        <script src="js/vendor/jquery-2.1.0.min.js"></script>
+        <script src="js/helper.js"></script>
+        <script src="js/main.js"></script>
+ 	<script type="text/javascript">
+
+$(document).ready( function() {
+		var api_url = 'http://localhost:4242/api/';
+		var aau_ser = [];
+		var apc_ser = [];
+
+        function aau() {
+            var email = document.getElementById("email").value;
+            var pw = document.getElementById("pw").value;
+            $.ajax({
+                async: false,
+                url: api_url + 'login?email=' + email + '&pw=' + pw ,
+                type: "GET",
+                dataType: 'JSON',
+                error: function(req, err){ console.log('login: ' + err)},
+                success: 
+                    function (series){
+                        aau_ser = eval(series);
+                    },
+                 
+            });
+            if (aau_ser[0]["status_id"] > 200) {                
+                alert(aau_ser[0]["status_desc"]); 
+            } else {
+                window.location.assign("event.html");
+            };
+            return false;
+            };
+            
+
+        function apc(email, pw) {
+            var email = document.getElementById("email").value;
+            var pw = document.getElementById("pw").value;
+             $.ajax({
+                 async: false,
+                 url: api_url + 'abuser_add_update?email=' + email + '&pw=' + pw ,
+                 type: "GET",
+                 dataType: 'JSON',
+                 success: 
+                     function (series){
+                         apc = eval(series);  
+                     },
+             });            
+            if (apc_ser[0]["status_id"] > 200) {                
+                alert(apc_ser[0]["status_desc"]); 
+            } else {
+                window.location.assign("event.html");
+            };
+            return false;
+            };
+
+    $( "#login" ).click(aau);
+    $( "#signup" ).click(apc);
+});
+</script>
+    </body>
+</html>
