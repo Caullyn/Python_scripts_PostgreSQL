@@ -8,10 +8,14 @@ Create a PostgreSQL Database, and run deploy_tool.py for schema and deploy.sh fo
     python deploy_tool.py -t2 fully_awesome postgres
     sh deploy.sh 
     
-Run nodeJS api and http-server
+Run nodeJS api
 
     cd node/
     node api.js
+
+Run http-server
+
+    cd public/
     http-server 
 
-Open http://localhost:8080/login.html in browser
+Open http://localhost:8080/event.html in browser
