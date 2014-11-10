@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION abuser.usp_band_add_update(
+CREATE OR REPLACE FUNCTION band.usp_band_add_update(
     i_asr_email TEXT,
     i_ban_name TEXT,
     i_ban_email TEXT,
