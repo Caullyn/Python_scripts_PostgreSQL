@@ -106,7 +106,9 @@ app.get('/api/event_add_update', function (req, res){
                        $$' + req.param("start") + '$$,  \
                        $$' + req.param("end") + '$$,  \
                        ' + req.param("evt_id") + ', 1, \
-                       $$' + req.param("band") + '$$);'
+                       $$' + req.param("band") + '$$, \
+                       $$' + req.param("img") + '$$, \
+                       $$' + req.param("img_type") + '$$);'
 						 
 	dbWrapper.fetchAll(query_string, null, function (err, result) {
 	  if (!err) {

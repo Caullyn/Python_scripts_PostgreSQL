@@ -82,6 +82,17 @@ BEGIN;
         evt_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         evt_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
+        
+    CREATE TABLE event.event_image (
+        evi_id BIGSERIAL PRIMARY KEY,
+        evi_evt_id BIGINT REFERENCES event.event(evt_id),
+        evi_img TEXT NOT NULL,
+        evi_type TEXT NOT NULL,
+        evi_default BOOLEAN DEFAULT FALSE,
+        evi_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
+        evi_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+        );
+        
     
     CREATE TABLE event.event_band(
         evb_id BIGSERIAL PRIMARY KEY,
