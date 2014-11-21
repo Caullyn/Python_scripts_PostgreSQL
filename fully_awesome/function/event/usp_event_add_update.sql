@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION event.usp_event_add_update(
     i_img_type TEXT
 )
 RETURNS TABLE(
-    evt_id BIGINT,
+    event_id BIGINT,
     status_id INT,
     status_desc TEXT
 )
@@ -19,7 +19,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     _asr_id BIGINT;
-    _evt_id TEXT;
+    _evt_id BIGINT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
@@ -56,7 +56,7 @@ BEGIN
     END IF;
     IF i_img IS NOT NULL THEN
         INSERT INTO event.event_image (evi_evt_id, evi_img, evi_type, evi_default)
-        SELECT _evt_id, i_img, i_img_type, 1;
+        SELECT _evt_id, i_img, i_img_type, true;
     END IF;
     RETURN QUERY SELECT _evt_id, _status_id, _status_desc;
 END;

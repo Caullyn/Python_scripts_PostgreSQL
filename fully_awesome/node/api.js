@@ -96,16 +96,21 @@ app.get('/api/band_add_update', function (req, res){
 app.get('/api/event_add_update', function (req, res){
 	var dbWrapper = new DBWrapper('pg', dbConnectionConfig);
 	var result_array;
+	var evt_id = "NULL";
+	
+	if (req.param("evt_id")  === parseInt(req.param("evt_id"), 10)) {
+	    evt_id = req.param("evt_id")
+    };
 	dbWrapper.connect();
 
-    query_string = 'SELECT status_id, status_desc \
-                      FROM abuser.usp_event_add_update( \
+    query_string = 'SELECT event_id, status_id, status_desc \
+                      FROM event.usp_event_add_update( \
                        $$' + req.param("email") + '$$, \
                        $$' + req.param("name") + '$$,  \
                        $$' + req.param("description") + '$$,  \
                        $$' + req.param("start") + '$$,  \
                        $$' + req.param("end") + '$$,  \
-                       ' + req.param("evt_id") + ', 1, \
+                       ' + evt_id + ', 1, \
                        $$' + req.param("band") + '$$, \
                        $$' + req.param("img") + '$$, \
                        $$' + req.param("img_type") + '$$);'

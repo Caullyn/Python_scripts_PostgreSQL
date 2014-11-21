@@ -12,8 +12,22 @@
         var clean_uri = location.protocol + "//" + location.host + location.pathname;
         window.history.replaceState({}, document.title, clean_uri);
     </script>
- 
-
+    <script type="text/javascript">
+    var datefield=document.createElement("input")
+    datefield.setAttribute("type", "date")
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n')
+    }
+</script>
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        $('#datepick').datepicker();
+    })
+}
+</script>
     </head>
     <body>
 <div id="header">
@@ -23,7 +37,7 @@
 
 <div id="section">
     <section class="loginform cf">
-    <form name="login" accept-charset="utf-8">
+    <form name="eventadd" accept-charset="utf-8">
     <table>
         <tr><td>
         <label for="usereventname">Name</label></td>
@@ -33,118 +47,99 @@
         <td><textarea id="description" name="Description" cols="25" rows="7">
         </textarea>  
         </td></tr>
+        <tr><td>Start Date</td>
+        <td><input type="date" id="usereventstart" name="datepick" size="20" />
+        </td></tr>
+        <tr><td>End Date</td>
+        <td><input type="date" id="usereventend" name="datepick" size="20" />
+        </td></tr>
+        <tr><td>Image</td>
+        <td><input id="inputFileToLoad" type="file" onchange="loadImageFileAsURL();" />
+        </td></tr>
+    </table>
     <table>
+        <tr><td>
+        <div id="imgTest"></div>
+        </td></tr>
+    </table>
     </form>
-    <div id="upload-global" class="popup">
-    <form method="post" id="upload-global-form" enctype="multipart/form-data" action="https://imgur.com/upload">
-           <div id="upload-global-start-upload">
-            <div class="panel">
-                <div>
-
-                    <table id="upload-global-actions">
-                        <tbody>
-                            <tr><td width="49.6%"> Supported formats: JPEG, GIF, PNG, APNG, TIFF, BMP, PDF, XCF </td></tr>
-                            <tr><td>
-                            <input id="inputFileToLoad" type="file" onchange="loadImageFileAsURL();" />
-
-                            <div id="imgTest"></div>
-                            </td></tr>
-                        </tbody>
-                    </table>
-
-                </div>
- 
-    </form>  
-    </div>
     </section>  
 </div>
 
         <script src="js/vendor/jquery-2.1.0.min.js"></script>
         <script src="js/helper.js"></script>
         <script src="js/main.js"></script>
+        <script src="js/uri.js"></script>
+
 <script type="text/javascript">
-$(document).ready( function() {
-    var api_url = 'http://localhost:4242/api/';
-    var eiau_ser = [];
-    function eiau(imgur_id) {
-         $.ajax({
-             async: false,
-             url: api_url + 'event_image_add_update?imgur_id=' + imgur_id,
-             type: "GET",
-             dataType: 'JSON',
-             success: 
-                 function (series){
-                     eiau_ser = eval(series);  
+
+    function imgurUpload(bass) {
+
+        var auth;
+        auth = 'Client-ID bd900681799a752';
+        $.ajax({
+          url: 'https://api.imgur.com/3/upload',
+          type: 'POST',
+          headers: {
+            Authorization: 'Client-ID bd900681799a752',
+            Accept: 'application/json'
+          },
+          data: {
+            image: bass,
+            type: 'base64'
+          },
+          success: function(result) {
+            var api_url = 'http://localhost:4242/api/';
+            var email = 'colin@wotjam.com';
+            var name = document.getElementById("usereventname");
+            var desc = document.getElementById("usereventdesc");
+            var start = document.getElementById("usereventstart").value;
+            var end = document.getElementById("usereventend").value;
+            var evt_id = URI(document.evt_id).query(true).value;
+            var band = document.getElementById("usereventband");
+            var eiau_ser = [];
+            var imgur = result.data.id;
+            console.log('cool ' + imgur );
+            $.ajax({
+                 type: "GET",
+                 url: api_url + 'event_add_update?email=' + email + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg',
+                 datatype: 'JSON',
+                 success: function (data) {  
+                    eiau_ser = eval(data); 
+                    console.log(eiau_ser[0]["status_id"]); 
+                    window.location.assign("eventone.html?evt_id=" + eiau_ser[0]["event_id"]);   
                  },
-         });            
-        if (eiau_ser[0]["status_id"] > 200) {                
-            alert(eiau_ser[0]["status_desc"]); 
-        } else {
-            window.location.assign("event.html");
-        };
-        return false;
-        };
+                 error: function () {
+                    alert(eiau_ser[0]["status_desc"]); 
+                }
+            })
 
-
-
-});
-
-function imgurUpload(bass) {
-
-    var auth;
-    auth = 'Client-ID bd900681799a752';
-    console.log('' + bass);
-    $.ajax({
-      url: 'https://api.imgur.com/3/upload',
-      type: 'POST',
-      headers: {
-        Authorization: 'Client-ID bd900681799a752',
-        Accept: 'application/json'
-      },
-      data: {
-        image: bass,
-        type: 'base64'
-      },
-      success: function(result) {
-        var api_url = 'http://localhost:4242/api/';
-        console.log('cool ' + result.data.id );
-        console.log('full ' + result );
-         $.ajax({
-             type: "GET",
-             url: api_url + 'event_add_update?email=' + email + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + result.data.id,
-             datatype: 'JSON',
-             success: function (data) {
-                window.location.assign("eventone.html?" + data.evt_id);                 
-             }
-        })
-      }});
-    
-}
-
-function loadImageFileAsURL(){
-    console.log('pressed,');
-    var filesSelected = document.getElementById("inputFileToLoad").files;
-    if (filesSelected.length > 0){
-        var fileToLoad = filesSelected[0];
-
-        var fileReader = new FileReader();
-
-        fileReader.onload = function(fileLoadedEvent) {
-            var srcData = fileLoadedEvent.target.result; 
-
-            var divTest = document.getElementById("imgTest");
-            var newImage = document.createElement('img');
-            newImage.src = srcData;
-
-            divTest.innerHTML = newImage.outerHTML;
-
-            imgurUpload(srcData.substring(23));
-        }
-        fileReader.readAsDataURL(fileToLoad);
-
+            return false;
+        }})
     }
 
-}
+    function loadImageFileAsURL(){
+        console.log('pressed,');
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0){
+            var fileToLoad = filesSelected[0];
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(fileLoadedEvent) {
+                var srcData = fileLoadedEvent.target.result; 
+
+                var divTest = document.getElementById("imgTest");
+                var newImage = document.createElement('img');
+                newImage.src = srcData;
+
+                divTest.innerHTML = newImage.outerHTML;
+
+                imgurUpload(srcData.substring(23));
+            }
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    }
 
 </script>
     </body>
