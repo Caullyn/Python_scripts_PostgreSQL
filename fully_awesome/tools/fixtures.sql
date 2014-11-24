@@ -8,7 +8,7 @@ BEGIN;
         'wase@gmail.com',
         'Just a band example.',
         1);
-        
+
     SELECT * FROM event.usp_event_add_update(
         'ex@mple.com'::TEXT,
         'Pre-show jam'::TEXT,
@@ -17,6 +17,8 @@ BEGIN;
         (now() + '1 week'::interval + '3 hours'::interval)::TIMESTAMPTZ,
         NULL::BIGINT,
         1::BIGINT,
+        '',
+        '1',
         '1');
         
     SELECT * FROM event.usp_event_add_update(
@@ -27,6 +29,8 @@ BEGIN;
         now() + '8 days'::interval + '3 hours'::interval,
         NULL,
         1,
+        '',
+        '1',
         '1');
         
     SELECT * FROM event.usp_event_add_update(
@@ -37,6 +41,8 @@ BEGIN;
         now() + '9 days'::interval + '3 hours'::interval,
         NULL,
         1,
+        '',
+        '1',
         '1');
         
 COMMIT;

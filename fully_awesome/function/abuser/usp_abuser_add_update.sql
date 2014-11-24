@@ -37,8 +37,8 @@ BEGIN
           FROM abuser._usp_abuser_pass_add(i_asr_email, i_geo_id, i_asr_pass) apa
           INTO _pass, _status_id, _status_desc;
         IF _status_id = 200 THEN            
-            INSERT INTO abuser.abuser (asr_email, asr_password, asr_geo_id)
-            VALUES (i_asr_email, _pass, i_geo_id);
+            INSERT INTO abuser.abuser (asr_user, asr_email, asr_password, asr_geo_id)
+            SELECT abuser._usp_abuser_gen_user(), i_asr_email, _pass, i_geo_id;
             _status_id = 200;
             _status_desc = 'Abuser Added.';
         END IF;

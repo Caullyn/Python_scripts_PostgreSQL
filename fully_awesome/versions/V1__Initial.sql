@@ -44,6 +44,7 @@ BEGIN;
         
     CREATE TABLE abuser.abuser (
         asr_id BIGSERIAL PRIMARY KEY, 
+        asr_user BIGINT UNIQUE NOT NULL,
         asr_email TEXT UNIQUE NOT NULL, 
         asr_password TEXT,
         asr_type_id BIGINT REFERENCES abuser.abuser_type(ast_id) NOT NULL DEFAULT 1,
