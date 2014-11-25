@@ -1,10 +1,10 @@
 BEGIN;
 
     CREATE SCHEMA abuser;
-    CREATE SCHEMA collection;
     CREATE SCHEMA geo;
     CREATE SCHEMA band;
     CREATE SCHEMA event;
+    CREATE SCHEMA sess;
     CREATE EXTENSION pgcrypto;
 
     CREATE TABLE abuser.abuser_type (
@@ -52,6 +52,15 @@ BEGIN;
         asr_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         asr_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
+    
+    CREATE TABLE sess.session (
+        ses_id BIGSERIAL PRIMARY KEY,
+        ses_asr_id BIGINT REFERENCES abuser.abuser(asr_id) NOT NULL,
+        ses_session TEXT NOT NULL,
+        ses_expired BOOLEAN NOT NULL DEFAULT FALSE,
+        ses_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
+        ses_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+        );
         
     CREATE TABLE band.band (
         ban_id BIGSERIAL PRIMARY KEY,
@@ -94,7 +103,6 @@ BEGIN;
         evi_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
         
-    
     CREATE TABLE event.event_band(
         evb_id BIGSERIAL PRIMARY KEY,
         evb_ban_id BIGINT REFERENCES band.band(ban_id) NOT NULL,
@@ -103,6 +111,6 @@ BEGIN;
     
     CREATE UNIQUE INDEX uqc_event_band ON event.event_band(evb_ban_id, evb_evt_id);
     
-    insert into abuser.salt values (DEFAULT, 'gfruc5', 1);
-    insert into abuser.salt values (DEFAULT, 'gfcur5', 2);
+    INSERT INTO abuser.salt values (DEFAULT, 'gfruc5', 1);
+    INSERT INTO abuser.salt values (DEFAULT, 'gfcur5', 2);
 COMMIT;
