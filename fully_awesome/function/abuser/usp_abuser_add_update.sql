@@ -12,13 +12,14 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     _asr_id BIGINT;
+    _user BIGINT;
     _sess_id TEXT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
 BEGIN
-    SELECT asr_id
-      INTO _asr_id
+    SELECT asr_id, asr_user
+      INTO _asr_id, _user
       FROM abuser.abuser
      WHERE asr_email = i_asr_email;
     
@@ -38,9 +39,10 @@ BEGIN
         SELECT apa.pass, apa.status_id, apa.status_desc
           FROM abuser._usp_abuser_pass_add(i_asr_email, i_geo_id, i_asr_pass) apa
           INTO _pass, _status_id, _status_desc;
+        SELECT abuser._usp_abuser_gen_user() INTO _user;
         IF _status_id = 200 THEN            
             INSERT INTO abuser.abuser (asr_user, asr_email, asr_password, asr_geo_id)
-            SELECT abuser._usp_abuser_gen_user(), i_asr_email, _pass, i_geo_id
+            SELECT _user, i_asr_email, _pass, i_geo_id
          RETURNING asr_id INTO _asr_id;
             _status_id = 200;
             _status_desc = 'Abuser Added.';
@@ -48,7 +50,7 @@ BEGIN
     END IF;    
     
     IF _status_id = 200 THEN
-        SELECT sess_id, sa.status_id, sa.status_desc 
+        SELECT _user || ',' || sess_id, sa.status_id, sa.status_desc 
           FROM sess.usp_sess_add(_asr_id) sa
           INTO _sess_id, _status_id, _status_desc;
     END IF;

@@ -26,7 +26,7 @@ BEGIN
            _status_id, _status_desc
       FROM event.event evt
      WHERE (evt.evt_start > now() OR evt.evt_end > now())
-     ORDER BY evt.evt_start, evt_name
+     ORDER BY evt.evt_start DESC, evt_name
      LIMIT 15;
      
 END;

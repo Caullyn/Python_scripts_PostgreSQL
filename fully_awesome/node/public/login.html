@@ -51,7 +51,7 @@
 
 <link rel="stylesheet" href="css/bw.css">
         
-<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script language="Javascript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
 <style>
 </style>
     <script type="text/javascript">
@@ -134,6 +134,7 @@ $(document).ready( function() {
             if (aau_ser[0]["status_id"] > 200) {                
                 alert(aau_ser[0]["status_desc"]); 
             } else {
+                localStorage.setItem("sess", aau_ser[0]["session_id"]);
                 window.location.assign("event.html");
             };
             return false;
@@ -150,12 +151,15 @@ $(document).ready( function() {
                  dataType: 'JSON',
                  success: 
                      function (series){
-                         apc = eval(series);  
+                         apc_ser = eval(series);  
                      },
-             });            
+             });    
+            console.log(apc_ser);
+            console.log(apc_ser[0]);        
             if (apc_ser[0]["status_id"] > 200) {                
                 alert(apc_ser[0]["status_desc"]); 
             } else {
+                localStorage.setItem("sess", apc_ser[0]["session_id"]);
                 window.location.assign("event.html");
             };
             return false;

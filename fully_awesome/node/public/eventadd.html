@@ -5,7 +5,7 @@
         <title></title>
 <link rel="stylesheet" href="css/bw.css">
         
-<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script language="Javascript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
 <style>
 </style>
     <script type="text/javascript">
@@ -106,7 +106,6 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
                  datatype: 'JSON',
                  success: function (data) {  
                     eiau_ser = eval(data); 
-                    console.log(eiau_ser[0]["status_id"]); 
                     window.location.assign("eventone.html?evt_id=" + eiau_ser[0]["event_id"]);   
                  },
                  error: function () {
@@ -119,7 +118,6 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
     }
 
     function loadImageFileAsURL(){
-        console.log('pressed,');
         var filesSelected = document.getElementById("inputFileToLoad").files;
         if (filesSelected.length > 0){
             var fileToLoad = filesSelected[0];
@@ -141,7 +139,39 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
         }
     }
 
-    function session_
+    function sessionCheck(){        
+        var api_url = 'http://localhost:4242/api/';
+        var sess = 0;
+        var sess_ser = [];
+        var sess_ret;
+        sess = localStorage.getItem("sess");
+        console.log(sess);
+        if (sess) {
+        
+            $.ajax({
+                     type: "GET",
+                     url: api_url + 'session_check?sess=' + sess,
+                     datatype: 'JSON',
+                     success: function (data) {  
+                        sess_ser = eval(data); 
+                        sess_ret = sess_ser[0]["status_id"];                        
+                     },
+                     error: function () {
+                        alert(sess_ser[0]["status_desc"]); 
+                    }
+                })
+            if (sess_ret > 200) {            
+                window.location.assign("login.html");
+            };
+            return false;
+        }
+        else {
+            window.location.assign("login.html");
+        }
+            
+    }
+    
+    sessionCheck();
 </script>
     </body>
 </html>
