@@ -26,7 +26,7 @@ BEGIN
     SELECT ses_id
       INTO _ses_id
       FROM sess.session
-     WHERE ses_asr_id = _user
+     WHERE ses_user = _user
        AND ses_session = _sess
        AND NOT ses_expired;
     

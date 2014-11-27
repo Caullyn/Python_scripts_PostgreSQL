@@ -12,7 +12,6 @@ AS $$
 DECLARE
     _salt TEXT;
     _pass TEXT;
-    _asr_id BIGINT;
     _user BIGINT;
     _sess TEXT;
     _status_id INT;
@@ -20,8 +19,8 @@ DECLARE
     _auth bytea;
 BEGIN
 
-    SELECT asr.asr_id, asr.asr_user, sal_salt, asr_password
-      INTO _asr_id, _user, _salt, _pass
+    SELECT asr.asr_user, sal_salt, asr_password
+      INTO _user, _salt, _pass
       FROM abuser.salt sal
       JOIN abuser.abuser asr ON asr.asr_geo_id = sal.sal_geo_id
      WHERE asr.asr_email = i_email;
@@ -33,7 +32,7 @@ BEGIN
         _status_desc = 'Abuser Authenticated.';
         SELECT _user || ',' || sess_id
           INTO _sess
-          FROM sess.usp_sess_add(_asr_id);
+          FROM sess.usp_sess_add(_user);
     ELSE
         _status_id = 400;
         _status_desc = 'Abuser Authentication Failed.';

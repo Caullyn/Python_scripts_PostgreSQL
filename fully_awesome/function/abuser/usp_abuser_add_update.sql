@@ -51,7 +51,7 @@ BEGIN
     
     IF _status_id = 200 THEN
         SELECT _user || ',' || sess_id, sa.status_id, sa.status_desc 
-          FROM sess.usp_sess_add(_asr_id) sa
+          FROM sess.usp_sess_add(_user) sa
           INTO _sess_id, _status_id, _status_desc;
     END IF;
     

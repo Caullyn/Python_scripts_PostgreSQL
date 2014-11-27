@@ -21,7 +21,7 @@ BEGIN
        )::TEXT 
     INTO _sess;
     
-    INSERT INTO sess.session (ses_asr_id, ses_session)
+    INSERT INTO sess.session (ses_user, ses_session)
     SELECT i_asr_user, _sess;        
     
     RETURN QUERY SELECT _sess, 200, 'OK'::TEXT;

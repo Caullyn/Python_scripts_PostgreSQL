@@ -55,7 +55,7 @@ BEGIN;
     
     CREATE TABLE sess.session (
         ses_id BIGSERIAL PRIMARY KEY,
-        ses_asr_id BIGINT REFERENCES abuser.abuser(asr_id) NOT NULL,
+        ses_user BIGINT REFERENCES abuser.abuser(asr_user) NOT NULL,
         ses_session TEXT NOT NULL,
         ses_expired BOOLEAN NOT NULL DEFAULT FALSE,
         ses_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
