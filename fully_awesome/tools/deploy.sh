@@ -6,3 +6,4 @@ psql -f ../function/band/usp_band_add_update.sql wotjam postgres
 psql -f ../function/event/usp_event_add_update.sql wotjam postgres
 psql -f ../function/event/usp_event_display.sql wotjam postgres
 psql -f ../function/sess/usp_sess_add.sql wotjam postgres
+psql -f ../function/sess/usp_sess_check.sql wotjam postgres
