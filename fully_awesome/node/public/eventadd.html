@@ -1,13 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
+<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title></title>
-<link rel="stylesheet" href="css/bw.css">
+    <link rel="stylesheet" href="css/bw.css">
         
-<script language="Javascript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script language="Javascript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
 <style>
-</style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      .controls {
+        margin-top: 16px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 400px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 401px;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+}
+
+    </style>
     <script type="text/javascript">
         var clean_uri = location.protocol + "//" + location.host + location.pathname;
         window.history.replaceState({}, document.title, clean_uri);
@@ -20,62 +70,79 @@
         document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
         document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n')
     }
-</script>
-<script>
-if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
-    jQuery(function($){ //on document.ready
-        $('#datepick').datepicker();
-    })
-}
-</script>
-    </head>
-    <body>
-<div id="header">
-    <h1>WotJam</h1>
+    </script>
+    <script>
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+        jQuery(function($){ //on document.ready
+            $('#datepick').datepicker();
+        })
+    }
+    </script>
 
-</div>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+    
+    <script src="js/vendor/jquery-2.1.0.min.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/uri.js"></script>
 
-<div id="section">
-    <section class="loginform cf">
-    <form name="eventadd" accept-charset="utf-8">
-    <table>
-        <tr><td>
-        <label for="usereventname">Name</label></td>
-        <td><input type="text" id="eventname" name="Name" placeholder="Event Name here." required />  
-        </td></tr><tr><td>
-        <label for="usereventdesc">Description</label></td>
-        <td><textarea id="description" name="Description" cols="25" rows="7">
-        </textarea>  
-        </td></tr>
-        <tr><td>Start Date</td>
-        <td><input type="date" id="usereventstart" name="datepick" size="20" />
-        </td></tr>
-        <tr><td>End Date</td>
-        <td><input type="date" id="usereventend" name="datepick" size="20" />
-        </td></tr>
-        <tr><td>Location</td>
-        <td><input type="text" id="inputLocation" type="file" onchange="gLocationSearch();" />
-        </td></tr>        
-        <tr><td>Image</td>
-        <td><input id="inputFileToLoad" type="file" onchange="loadImageFileAsURL();" />
-        </td></tr>
-    </table>
-    <table>
-        <tr><td>
-        <div id="imgTest"></div>
-        </td></tr>
-    </table>
-    </form>
-    </section>  
-</div>
+    <script type="text/javascript">
+   
+      
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(
+             36.1389, -5.355),
+            zoom: 15
+        };
+        
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        var input = (document.getElementById('inputLocation'));      
+        var autocomplete = new google.maps.places.Autocomplete(input);  
+        autocomplete.bindTo('bounds', map);
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+ 
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            infowindow.close();
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+              map.fitBounds(place.geometry.viewport);
+            } else {
+              map.setCenter(place.geometry.location);
+              map.setZoom(17);
+            }
+            marker.setIcon(({
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(35, 35)
+            }));
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
 
-        <script src="js/vendor/jquery-2.1.0.min.js"></script>
-        <script src="js/helper.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/uri.js"></script>
+            var address = '';
+            if (place.address_components) {
+              address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+              ].join(' ');
+            }
 
-<script type="text/javascript">
-
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, marker);
+        })
+    }    
     function imgurUpload(bass) {
 
         var auth;
@@ -122,9 +189,9 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
     function gLocationSearch(bass) {
 
         var auth;
-        auth = 'a170ecdaf278bc9f6085a9721a728ce9f02105b9';
+        auth = 'AIzaSyAhaD4HwgofkA2_9Z7fLbGB1V8Shi-S7do';
         $.ajax({
-          url: 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant&key=a170ecdaf278bc9f6085a9721a728ce9f02105b9',
+          url: 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant&key=AIzaSyAhaD4HwgofkA2_9Z7fLbGB1V8Shi-S7do',
           type: 'GET',
           headers: {
             Authorization: auth,
@@ -193,8 +260,49 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
         }
             
     }
-    
-    sessionCheck();
+
+    sessionCheck();    
+    google.maps.event.addDomListener(window, 'load', initialize);
 </script>
-    </body>
+
+</head>
+<body>
+    <div id="header">
+        <h1>WotJam</h1>
+    </div>
+
+<div id="section">
+    <section class="loginform cf">
+    <form name="eventadd" accept-charset="utf-8">
+    <table>
+        <tr><td>
+        <label for="usereventname">Name</label></td>
+        <td><input type="text" id="eventname" name="Name" placeholder="Event Name here." required />  
+        </td></tr><tr><td>
+        <label for="usereventdesc">Description</label></td>
+        <td><textarea id="description" name="Description" cols="25" rows="7">
+        </textarea>  
+        </td></tr>
+        <tr><td>Start Date</td>
+        <td><input type="date" id="usereventstart" name="datepick" size="20" />
+        </td></tr>
+        <tr><td>End Date</td>
+        <td><input type="date" id="usereventend" name="datepick" size="20" />
+        </td></tr>        
+        <tr><td>Image</td>
+        <td><input id="inputFileToLoad" type="file" onchange="loadImageFileAsURL();" />
+        </td></tr>
+    </table>
+    <table>
+        <tr><td>
+        <div id="imgTest"></div>
+        </td></tr>
+    </table>
+    <input type="text" id="inputLocation" type="file" size="65" />
+    </form>
+    </section>  
+</div>
+
+<div id="map-canvas"></div>
+</body>
 </html>
