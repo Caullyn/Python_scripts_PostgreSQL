@@ -25,6 +25,13 @@ padding: 0px
     margin-right: auto ;
     padding:10px;	 	 
 }
+#map-canvas {
+    width:250px;
+    height:250px;
+    margin-left: auto ;
+    margin-right: auto ;
+    padding:10px;	 	 
+}
 #footer {
     background-color:black;
     color:white;
