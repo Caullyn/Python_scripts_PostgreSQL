@@ -97,10 +97,11 @@ function initialize() {
     })
     
 }  
-function imgurUpload(bass) {
+function imgurUpload(bass, imgType) {
 
     var auth;
     auth = 'Client-ID bd900681799a752';
+    
     $.ajax({
       url: 'https://api.imgur.com/3/upload',
       type: 'POST',
@@ -110,7 +111,7 @@ function imgurUpload(bass) {
       },
       data: {
         image: bass,
-        type: 'base64'
+        type: imgType
       },
       success: function(result) {
         var api_url = 'http://localhost:4242/api/';
@@ -125,7 +126,7 @@ function imgurUpload(bass) {
         var lng = document.getElementById("lngbox").value;
         var add = document.getElementById("addybox").value;
         var eiau_ser = [];
-        var imgur = result.data.id;
+        var imgur = result.data.id; 
         console.log('cool ' + imgur );
         $.ajax({
              type: "GET",
@@ -140,6 +141,8 @@ function imgurUpload(bass) {
             }
         })
 
+        
+        var divTest = document.getElementById("imgTest");
         return false;
     }})
 }
@@ -148,8 +151,8 @@ function loadImageFileAsURL(){
     var filesSelected = document.getElementById("inputFileToLoad").files;
     if (filesSelected.length > 0){
         var fileToLoad = filesSelected[0];
-
-        var fileReader = new FileReader();
+        var imgType = filesSelected[0].name.split('.').pop().toLowerCase();
+        var fileReader = new FileReader(); 
 
         fileReader.onload = function(fileLoadedEvent) {
             var srcData = fileLoadedEvent.target.result; 
@@ -160,7 +163,7 @@ function loadImageFileAsURL(){
 
             divTest.innerHTML = newImage.outerHTML;
 
-            imgurUpload(srcData.substring(23));
+            imgurUpload(srcData.substring(23), imgType);
         }
         fileReader.readAsDataURL(fileToLoad);
     }
