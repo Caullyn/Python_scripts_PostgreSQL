@@ -36,6 +36,13 @@ BEGIN;
     INSERT INTO geo.geo_location
     VALUES (DEFAULT, 'Europe', DEFAULT, DEFAULT);
     
+    CREATE TABLE geo.address (
+        add_id BIGSERIAL PRIMARY KEY,
+        add_lat NUMERIC(20,17),
+        add_lng NUMERIC(20,17),
+        add_formatted TEXT
+        );
+        
     CREATE TABLE abuser.salt (
         sal_id BIGSERIAL PRIMARY KEY,
         sal_salt TEXT NOT NULL,
@@ -89,6 +96,7 @@ BEGIN;
         evt_start TIMESTAMP WITH TIME ZONE NOT NULL,
         evt_end TIMESTAMP WITH TIME ZONE,
         evt_geo_id BIGINT REFERENCES geo.geo_location (geo_id) NOT NULL,
+        evt_add_id BIGINT REFERENCES geo.address(add_id) NOT NULL,
         evt_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         evt_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );

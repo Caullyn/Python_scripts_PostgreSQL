@@ -8,7 +8,10 @@ CREATE OR REPLACE FUNCTION event.usp_event_add_update(
     i_evt_geo_id BIGINT,
     i_band TEXT,
     i_img TEXT,
-    i_img_type TEXT
+    i_img_type TEXT,
+    i_lat NUMERIC(20,17),
+    i_lng NUMERIC(20,17),
+    i_addy TEXT
 )
 RETURNS TABLE(
     event_id BIGINT,
@@ -20,6 +23,7 @@ AS $$
 DECLARE
     _asr_id BIGINT;
     _evt_id BIGINT;
+    _add_id BIGINT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
@@ -30,12 +34,23 @@ BEGIN
      WHERE asr_email = i_asr_email
       INTO _asr_id;
     
+    SELECT add_id
+      INTO _add_id
+      FROM geo.address
+     WHERE add_formatted = i_addy;
+     
+    IF _add_id IS NULL THEN
+        INSERT INTO geo.address (add_lat, add_lng, add_formatted)
+        VALUES (i_lat, i_lng, i_addy)
+     RETURNING add_id INTO _add_id;
+    END IF;
     IF i_evt_id IS NOT NULL THEN 
         UPDATE event.event 
            SET evt_description = i_evt_description,
                evt_name = i_evt_name,
                evt_start = i_evt_start,
                evt_end = i_evt_end,
+               evt_add_id = i_add_id,
                evt_modified = now()
          WHERE evt_id = i_evt_id;
         
@@ -48,8 +63,8 @@ BEGIN
         _status_id = 200;
         _status_desc = 'evt_id updated: ' || i_evt_id::text;
     ELSE
-        INSERT INTO event.event (evt_asr_id, evt_name, evt_description, evt_start, evt_end, evt_geo_id)
-        VALUES (_asr_id, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id)
+        INSERT INTO event.event (evt_asr_id, evt_name, evt_description, evt_start, evt_end, evt_geo_id, evt_add_id)
+        VALUES (_asr_id, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id, _add_id)
         RETURNING evt_id INTO _evt_id;
         _status_id = 200;
         _status_desc = 'evt_id inserted: ' || _evt_id::text;

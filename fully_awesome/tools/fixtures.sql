@@ -19,7 +19,10 @@ BEGIN;
         1::BIGINT,
         '',
         '1',
-        '1');
+        '1',
+        -5::NUMERIC(20,17),
+        100::NUMERIC(20,17),
+        'place'::TEXT);
         
     SELECT * FROM event.usp_event_add_update(
         'ex@mple.com',
@@ -31,7 +34,10 @@ BEGIN;
         1,
         '',
         '1',
-        '1');
+        '1',
+        -5::NUMERIC(20,17),
+        100::NUMERIC(20,17),
+        'place'::TEXT);
         
     SELECT * FROM event.usp_event_add_update(
         'ex@mple.com',
@@ -43,6 +49,9 @@ BEGIN;
         1,
         '',
         '1',
-        '1');
+        '1',
+        -5::NUMERIC(20,17),
+        100::NUMERIC(20,17),
+        'place'::TEXT);
         
 COMMIT;

@@ -37,8 +37,6 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
 <script src="js/uri.js"></script>
 
 <script type="text/javascript">
-
-$(document).ready( function() {
 function initialize() {
     var mapOptions = {
         center: new google.maps.LatLng(
@@ -60,6 +58,8 @@ function initialize() {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
+        var address = place.formatted_address;
+        document.getElementById('addybox').value = address;
         document.getElementById('latbox').value = place.geometry.location.lat();
         document.getElementById('lngbox').value = place.geometry.location.lng();
         if (!place.geometry) {
@@ -121,12 +121,15 @@ function imgurUpload(bass) {
         var end = document.getElementById("usereventend").value;
         var evt_id = URI(document.evt_id).query(true).value;
         var band = document.getElementById("usereventband");
+        var lat = document.getElementById("latbox").value;
+        var lng = document.getElementById("lngbox").value;
+        var add = document.getElementById("addybox").value;
         var eiau_ser = [];
         var imgur = result.data.id;
         console.log('cool ' + imgur );
         $.ajax({
              type: "GET",
-             url: api_url + 'event_add_update?email=' + email + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg',
+             url: api_url + 'event_add_update?email=' + email + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add,
              datatype: 'JSON',
              success: function (data) {  
                 eiau_ser = eval(data); 
@@ -217,7 +220,7 @@ function sessionCheck(){
 sessionCheck();    
 google.maps.event.addDomListener(window, 'load', initialize);
 
-function addmarker () {
+function addevent () {
     var api_url = 'http://localhost:4242/api/';
     var aau_ser = [];
     var map = document.getElementById('map-canvas');
@@ -257,7 +260,6 @@ function addmarker () {
     };
 }
   
-});
 </script>
 
 </head>
@@ -283,18 +285,18 @@ function addmarker () {
         <input type="date" id="usereventend" name="datepick" size="20" />
         </td></tr>        
         <tr><td>
-        <input id="inputFileToLoad" type="file" onchange="loadImageFileAsURL();" />
+        <input id="inputFileToLoad" type="file" />
         </td></tr>
     </table>
     <table>
         <tr><td>
-        <div id="imgTest"></div>
-        </td></tr>
-        <tr><td>
         <input type="text" id="inputLocation" type="text" size="44" autocomplete="off" />    
         </td></tr>
         <tr><td>
-        <input type="button" id="Create" value="Create Event" onclick="addmarker()">
+        <input type="button" id="Create" value="Create Event" onclick="loadImageFileAsURL()">
+        </td></tr>
+        <tr><td>
+        <div id="imgTest"></div>
         </td></tr>
     </table>
     </form>
@@ -303,8 +305,10 @@ function addmarker () {
 
 <div id="map-canvas"></div>
 <div id="latlng">
-    <input size="20" type="text" id="latbox" name="lat" />
-    <input size="20" type="text" id="lngbox" name="lng" />
+    <input size="5" type="text" id="latbox" name="lat" />
+    <input size="5" type="text" id="lngbox" name="lng" />
+    <input size="5" type="text" id="addybox" name="addy" />
+    <input size="5" type="text" id="imgbox" name="imgur" />
 </div>
 </body>
 </html>

@@ -143,7 +143,10 @@ app.get('/api/event_add_update', function (req, res){
                        ' + evt_id + ', 1, \
                        $$' + req.param("band") + '$$, \
                        $$' + req.param("img") + '$$, \
-                       $$' + req.param("img_type") + '$$);'
+                       $$' + req.param("img_type") + '$$, \
+                       ' + req.param("lat") + ', \
+                       ' + req.param("lng") + ', \
+                       $$' + req.param("add") + '$$);'
 						 
 	dbWrapper.fetchAll(query_string, null, function (err, result) {
 	  if (!err) {
