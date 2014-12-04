@@ -60,6 +60,8 @@ function initialize() {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
+        document.getElementById('latbox').value = place.geometry.location.lat();
+        document.getElementById('lngbox').value = place.geometry.location.lng();
         if (!place.geometry) {
             return;
         }
@@ -91,14 +93,10 @@ function initialize() {
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
         infowindow.open(map, marker);
-        
-    
-    var tmpPlace = autocomplete.getPlace();
-     document.getElementById('latbox').innerHTML = tmpPlace.geometry.location.lat();
-     document.getElementById('lngbox').innerHTML = tmpPlace.geometry.location.lng();
 
     })
-}    
+    
+}  
 function imgurUpload(bass) {
 
     var auth;
@@ -233,9 +231,7 @@ function addmarker () {
     var lat = map_canvas.geometry.lat()
     console.log(lat);
 
-//         var place = autocomplete.getPlace();
-    var input = (document.getElementById('inputLocation'));      
-//     console.log(place);
+    var input = (document.getElementById('inputLocation'));   
     function apc(email, pw) {
         var email = document.getElementById("email").value;
         var pw = document.getElementById("pw").value;
@@ -260,6 +256,7 @@ function addmarker () {
         return false;
     };
 }
+  
 });
 </script>
 
@@ -305,9 +302,9 @@ function addmarker () {
 </div>
 
 <div id="map-canvas"></div>
-  <div id="latlong">
-    Latitude: <input size="20" type="text" id="latbox" name="lat" >
-    Longitude: <input size="20" type="text" id="lngbox" name="lng" >
-  </div>
+<div id="latlng">
+    <input size="20" type="text" id="latbox" name="lat" />
+    <input size="20" type="text" id="lngbox" name="lng" />
+</div>
 </body>
 </html>
