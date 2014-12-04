@@ -143,27 +143,6 @@ function imgurUpload(bass) {
         return false;
     }})
 }
-function gLocationSearch(bass) {
-
-    var auth;
-    auth = 'AIzaSyAhaD4HwgofkA2_9Z7fLbGB1V8Shi-S7do';
-    $.ajax({
-      url: 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant&key=AIzaSyAhaD4HwgofkA2_9Z7fLbGB1V8Shi-S7do',
-      type: 'GET',
-      headers: {
-        Authorization: auth,
-        Accept: 'application/json'
-      },
-      data: {
-        query: 'restaurant'
-      },
-      success: function(result) {
-        console.log('coolio ' + JSON.stringify(result) );
-        return false;
-      },
-      error: function(req, err){ console.log('sSearch: ' + err)}
-    })
-}
 
 function loadImageFileAsURL(){
     var filesSelected = document.getElementById("inputFileToLoad").files;
@@ -219,46 +198,6 @@ function sessionCheck(){
 }
 sessionCheck();    
 google.maps.event.addDomListener(window, 'load', initialize);
-
-function addevent () {
-    var api_url = 'http://localhost:4242/api/';
-    var aau_ser = [];
-    var map = document.getElementById('map-canvas');
-    var mapOptions = {
-        center: new google.maps.LatLng(
-         36.1389, -5.355),
-        zoom: 15
-    };
-    var $el = $('#map-canvas');
-    var map_canvas = new google.maps.Map($el[0], mapOptions);
-    var lat = map_canvas.geometry.lat()
-    console.log(lat);
-
-    var input = (document.getElementById('inputLocation'));   
-    function apc(email, pw) {
-        var email = document.getElementById("email").value;
-        var pw = document.getElementById("pw").value;
-         $.ajax({
-             async: false,
-             url: api_url + 'abuser_add_update?email=' + email + '&pw=' + pw ,
-             type: "GET",
-             dataType: 'JSON',
-             success: 
-                 function (series){
-                     apc_ser = eval(series);  
-                 },
-         });    
-        console.log(apc_ser);
-        console.log(apc_ser[0]);        
-        if (apc_ser[0]["status_id"] > 200) {                
-            alert(apc_ser[0]["status_desc"]); 
-        } else {
-            localStorage.setItem("sess", apc_ser[0]["session_id"]);
-            window.location.assign("event.html");
-        };
-        return false;
-    };
-}
   
 </script>
 
