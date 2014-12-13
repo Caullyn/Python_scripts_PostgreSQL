@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION sess.usp_sess_check(
     i_sess TEXT
 )
 RETURNS TABLE(
+    asr_id INT,
     status_id INT,
     status_desc TEXT
 )
@@ -39,7 +40,7 @@ BEGIN
         _status_desc = 'No active token.';
     END IF;
     
-    RETURN QUERY SELECT _status_id, _status_desc;
+    RETURN QUERY SELECT _user, _status_id, _status_desc;
     
 END;
 $$;

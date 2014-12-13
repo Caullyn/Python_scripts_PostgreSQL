@@ -235,11 +235,20 @@ app.get('/api/abuser_add_update', function (req, res){
 
 app.get('/api/event_display', function (req, res){
 	var dbWrapper = new DBWrapper('pg', dbConnectionConfig);
-	var result_array;
+	var result_array,
+	    evt_id,
+	    undef;
+	    
+	evt_id = req.param("evt_id");
+	console.log(evt_id);
+	if(undef == evt_id) {
+	    evt_id = "NULL";
+	}
 	dbWrapper.connect();
 
     query_string = 'SELECT evt_id, evt_name, evt_description, evt_start \
-                      FROM event.usp_event_display(1::bigint,NULL::text);'
+                      FROM event.usp_event_display(' + evt_id + ', \
+                      1::bigint,NULL::text);'
 						 
 	dbWrapper.fetchAll(query_string, null, function (err, result) {
 	  if (!err) {
@@ -259,7 +268,6 @@ app.get('/api/event_display', function (req, res){
 	  });
 	});
 });
-
 
 // start and end dates 
 

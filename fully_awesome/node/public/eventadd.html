@@ -96,7 +96,41 @@ function initialize() {
 
     })
     
+}
+
+function sessionCheck(){        
+    var api_url = 'http://localhost:4242/api/';
+    var asr_id = 0;
+    var sess = 0;
+    var sess_ser = [];
+    var sess_ret;
+    sess = localStorage.getItem("sess");
+    if (sess) {
+    
+        $.ajax({
+                 type: "GET",
+                 url: api_url + 'session_check?sess=' + sess,
+                 datatype: 'JSON',
+                 success: function (data) {  
+                    sess_ser = eval(data); 
+                    asr_id = sess_ser[0]["asr_id"];    
+                    sess_ret = sess_ser[0]["status_id"];                        
+                 },
+                 error: function () {
+                    alert(sess_ser[0]["status_desc"]); 
+                }
+            })
+        if (sess_ret > 200) {            
+            window.location.assign("login.html");
+        };
+        return asr_id;
+    }
+    else {
+        window.location.assign("login.html");
+    }
+        
 }  
+
 function imgurUpload(bass, imgType) {
 
     var auth;
@@ -115,9 +149,9 @@ function imgurUpload(bass, imgType) {
       },
       success: function(result) {
         var api_url = 'http://localhost:4242/api/';
-        var email = 'colin@wotjam.com';
-        var name = document.getElementById("usereventname");
-        var desc = document.getElementById("usereventdesc");
+        var asr_id = sessionCheck();
+        var name = document.getElementById("evtName");
+        var desc = document.getElementById("evtDesc");
         var start = document.getElementById("usereventstart").value;
         var end = document.getElementById("usereventend").value;
         var evt_id = URI(document.evt_id).query(true).value;
@@ -140,7 +174,6 @@ function imgurUpload(bass, imgType) {
                 alert(eiau_ser[0]["status_desc"]); 
             }
         })
-
         
         var divTest = document.getElementById("imgTest");
         return false;
@@ -168,37 +201,6 @@ function loadImageFileAsURL(){
         fileReader.readAsDataURL(fileToLoad);
     }
 }
-
-function sessionCheck(){        
-    var api_url = 'http://localhost:4242/api/';
-    var sess = 0;
-    var sess_ser = [];
-    var sess_ret;
-    sess = localStorage.getItem("sess");
-    if (sess) {
-    
-        $.ajax({
-                 type: "GET",
-                 url: api_url + 'session_check?sess=' + sess,
-                 datatype: 'JSON',
-                 success: function (data) {  
-                    sess_ser = eval(data); 
-                    sess_ret = sess_ser[0]["status_id"];                        
-                 },
-                 error: function () {
-                    alert(sess_ser[0]["status_desc"]); 
-                }
-            })
-        if (sess_ret > 200) {            
-            window.location.assign("login.html");
-        };
-        return false;
-    }
-    else {
-        window.location.assign("login.html");
-    }
-        
-}
 sessionCheck();    
 google.maps.event.addDomListener(window, 'load', initialize);
   
@@ -215,10 +217,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
     <form name="eventadd" accept-charset="utf-8">
     <table>
         <tr><td>
-        <input type="text" align="middle" id="eventname" name="Name" placeholder="Event name here." size="44" required />  
+        <input type="text" align="middle" id="eventname" name="evtName" placeholder="Event name here." size="44" required />  
         </td></tr>
         <tr><td>
-        <textarea id="description" name="Description" placeholder="Event Description" cols="32" rows="7"></textarea>  
+        <textarea id="evtDesc" name="Description" placeholder="Event Description" cols="32" rows="7"></textarea>  
         </td></tr>
         <tr><td>
         <input type="date" id="usereventstart" name="datepick" placeholder="Start Date" size="20" />

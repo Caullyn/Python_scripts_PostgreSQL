@@ -1,100 +1,97 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
+<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title></title>
     <link rel="stylesheet" href="css/bw.css">
-        <script src="js/vendor/jquery-2.1.0.min.js"></script>
-        <script src="js/helper.js"></script>
-        <script src="js/main.js"></script>
-    <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        
+    <script language="Javascript" type="text/javascript" src="js/jquery-1.9.1.js"></script>
 <style>
 </style>
-    <script type="text/javascript">
-        var clean_uri = location.protocol + "//" + location.host + location.pathname;
-        window.history.replaceState({}, document.title, clean_uri);
-    </script>
-     <script src="http://masonry.desandro.com/masonry.pkgd.min.js"></script>
-        <script src="http://desandro.github.io/masonry/js/modernizr-transitions.js"></script>
-        <sript src="https://gist.githubusercontent.com/desandro/797120/raw/c75b3447719c817f8f213fef23eb2836f1518acc/gistfile1.js"></script>
-    <script src="http://www.pollyformaturas.com.br/js/masonry/box-maker.js"></script>
-       <script type="text/javascript" language="javascript">
-            $('#container').masonry();
-        </script>
-    </head>
-    <body>
+<script type="text/javascript">
+var datefield=document.createElement("input")
+datefield.setAttribute("type", "date")
+if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+    document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+    document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+    document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n')
+}
+</script>
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        $('#datepick').datepicker();
+    })
+}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+
+<script src="js/vendor/jquery-2.1.0.min.js"></script>
+<script src="js/helper.js"></script>
+<script src="js/main.js"></script>
+<script src="js/uri.js"></script>
+
+<script type="text/javascript">
+ $(document).ready(function () {
+    function evtboxes() {
+        var evt_id = window.location.search.substring(1).split("=")[1];
+        console.log(evt_id);
+        var api_url = 'http://localhost:4242/api/';
+        var conHtml = '';
+        $.ajax({
+             type: "GET",
+             url: api_url + 'event_display?evt_id=' + evt_id,
+             datatype: 'JSON',
+             success: function (data) {
+                console.log(data[0]);                
+                var containerSizer = $( '#container' );
+                conHtml = '' + '<div class="box" id="' + data[0].evt_id + '">' + '<div class="boxinfo"><label class=""><label id="name">' + data[0].evt_name + '</label><p>' + data[0].evt_description + '</p><p>' + data[0].evt_start + '</p></div></div>';
+                var cont = document.getElementById('section');
+                $( containerSizer ).prepend( conHtml );
+                cont.InnerHTML = conHtml;
+                console.log(conHtml);
+                
+                $( containerSizer ).masonry( 'reloadItems' );
+                $( containerSizer ).masonry( 'layout' );
+                
+                 $('content').fadeIn();
+             }
+        });
+    }
+    evtboxes();
+ });         
+function initialize() {
+    var mapOptions = {
+        center: new google.maps.LatLng(
+         36.1389, -5.355),
+        zoom: 15
+    };
+    
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    var input = (document.getElementById('inputLocation'));      
+    var infowindow = new google.maps.InfoWindow();
+    var marker = new google.maps.Marker({
+      map: map,
+      anchorPoint: new google.maps.Point(0, -29)
+    });
+    
+}    
+</script>
+
+</head>
+<body>
     <div id="header">
         <h1>WotJam</h1>
     </div>
 
-
-    <section id="content">
-    <table>
-        <tr><td>
-        <input type="text" id="lblName" value="name" />
-        <tr><td>
-        <input type="text" id="inputLocation" type="text" size="44" autocomplete="off" />    
-        </td></tr>
-        <tr><td>
-        <div id="imgTest"></div>
-        </td></tr>
-    </table>
+  <section id="content">
+  
 <div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 50, "itemSelector": ".box" }'>
 
 </div>
-
-
-<script type="text/javascript">
- $(document).ready(function () {
-    
-    function imgLoaded() {
-             var containerImg = $( '#container' );
-        imagesLoaded( containerImg, function() {
-  msnry.layout();
-});
-};
-  
-     function listboxes() {
-         var api_url = 'http://localhost:4242/api/';
-         $.ajax({
-             type: "GET",
-             url: api_url + 'event_display',
-             datatype: 'JSON',
-             success: function (data) {
- 
-                 var jsonArray = data;
-                 var boxes = "";
-                 $.each(jsonArray, function (i, box) {
-                     if(data != undefined){
-                         boxes += createbox(box.evt_id, box.evt_name, box.evt_description, box.evt_start, box.evt_end);
-                     }
-                 });
-//                  jQuery("#container").append(boxes).masonry( 'appended', boxes );
-                 
-
-             }
-         });
-    };
-
-     function createbox(evt_id, evt_name, evt_description, evt_start, evt_end) {
-         var boxHtml = "",
-             tagsHtml = "";
- 
-         boxHtml = '' + '<div class="box" id="' + evt_id + '">' + '<div class="boxinfo">' + '<label class="boxname"><a href="' + "link" + '" class="boxlink" target="_blank">' + evt_name + '</a></label><p>' + evt_description + '</p><p>' + evt_start + '</p></div></div>';
-         var $boxHtml = $(boxHtml);
-         var containerSizer = $( '#container' );
-        containerSizer.masonry( {
-            columnWidth:  210,
-            itemSelector: '.box'
-        } );
-        $( containerSizer ).prepend( boxHtml );
-        $( containerSizer ).masonry( 'reloadItems' );
-        $( containerSizer ).masonry( 'layout' );
-     };
-     listboxes();
-
-     $('content').fadeIn();
- });
-</script> 
-    </body>
+<div id="map-canvas"></div>
+</section>
+</body>
 </html>
+

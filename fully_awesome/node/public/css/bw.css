@@ -90,6 +90,14 @@ label {
     background: #CCC;
 }
 
+.displaybox {
+    width: 360px;
+/*     height: 100px; */
+    float: left;
+    margin: 5px;
+    background: #CCC;
+}
+
 .controls {
     margin-top: 16px;
     border: 1px solid transparent;
