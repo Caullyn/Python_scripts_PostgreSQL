@@ -65,7 +65,7 @@ app.get('/api/session_check', function (req, res){
 	var result_array;
 	dbWrapper.connect();
 
-    query_string = 'SELECT status_id, status_desc \
+    query_string = 'SELECT asr_id, status_id, status_desc \
                       FROM sess.usp_sess_check( \
                        $$' + req.param("sess") + '$$);'
 						 
