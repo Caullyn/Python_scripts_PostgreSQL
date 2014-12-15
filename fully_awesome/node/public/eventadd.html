@@ -117,20 +117,24 @@ function sessionCheck(){
                     console.log("sess_ser[0]: " + sess_ser[0]);
                     console.log("sess_ser[0][asr_id]: " + sess_ser[0]["asr_id"]);
                     console.log("asr_id: " + asr_id);
-                    sess_ret = sess_ser[0]["status_id"];                        
+                    sess_ret = sess_ser[0]["status_id"];  
+                    
+                    console.log(sess_ret);  
+                    if (sess_ret > 200) {      
+                        console.log(sess_ret);      
+                        window.location.assign("login.html");
+                        return false;
+                    };                      
                  },
                  error: function () {
                     alert(sess_ser[0]["status_desc"]); 
                 }
             })
-        if (sess_ret > 200) {            
-            window.location.assign("login.html");
-        };
+
     }
     else {
         window.location.assign("login.html");
     }
-    
     
     return asr_id;
         
@@ -178,7 +182,6 @@ function eventAddUpdate(imgur){
     var add = document.getElementById("addybox").value;
     var eiau_ser = [];
     
-    console.log(api_url + 'event_add_update?sess=' + sess + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add);
     $.ajax({
          type: "GET",
          url: api_url + 'event_add_update?sess=' + sess + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add,

@@ -65,7 +65,7 @@ app.get('/api/session_check', function (req, res){
 	var result_array;
 	dbWrapper.connect();
 
-    query_string = 'SELECT asr_id, status_id, status_desc \
+    query_string = 'SELECT asr_user, status_id, status_desc \
                       FROM sess.usp_sess_check( \
                        $$' + req.param("sess") + '$$);'
 						 
@@ -132,7 +132,6 @@ app.get('/api/event_add_update', function (req, res){
 	    evt_id = req.param("evt_id")
     };
 	dbWrapper.connect();
-    console.log(req);
     query_string = 'SELECT event_id, status_id, status_desc \
                       FROM event.usp_event_add_update( \
                        $$' + req.param("sess") + '$$, \

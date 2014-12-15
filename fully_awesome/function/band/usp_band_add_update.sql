@@ -14,7 +14,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     _user BIGINT;
-    _ban_id TEXT;
+    _ban_id BIGINT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;

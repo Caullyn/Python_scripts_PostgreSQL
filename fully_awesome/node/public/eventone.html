@@ -36,31 +36,23 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
  $(document).ready(function () {
     function evtboxes() {
         var evt_id = window.location.search.substring(1).split("=")[1];
-        console.log(evt_id);
         var api_url = 'http://localhost:4242/api/';
         var conHtml = '';
         $.ajax({
-             type: "GET",
-             url: api_url + 'event_display?evt_id=' + evt_id,
-             datatype: 'JSON',
-             success: function (data) {
-                console.log(data[0]);                
+            type: "GET",
+            url: api_url + 'event_display?evt_id=' + evt_id,
+            datatype: 'JSON',
+            success: function (data) {
                 var containerSizer = $( '#container' );
                 conHtml = '' + '<div class="box" id="' + data[0].evt_id + '">' + '<div class="boxinfo"><label class=""><label id="name">' + data[0].evt_name + '</label><p>' + data[0].evt_description + '</p><p>' + data[0].evt_start + '</p></div></div>';
-                var cont = document.getElementById('section');
                 $( containerSizer ).prepend( conHtml );
-                cont.InnerHTML = conHtml;
-                console.log(conHtml);
                 
-                $( containerSizer ).masonry( 'reloadItems' );
-                $( containerSizer ).masonry( 'layout' );
-                
-                 $('content').fadeIn();
-             }
+                $('content').fadeIn();
+            }
         });
     }
     evtboxes();
- });         
+});         
 function initialize() {
     var mapOptions = {
         center: new google.maps.LatLng(
@@ -94,4 +86,3 @@ function initialize() {
 </section>
 </body>
 </html>
-
