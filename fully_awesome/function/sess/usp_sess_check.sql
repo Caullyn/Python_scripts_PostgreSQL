@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION sess.usp_sess_check(
     i_sess TEXT
 )
 RETURNS TABLE(
-    asr_id INT,
+    asr_id BIGINT,
     status_id INT,
     status_desc TEXT
 )
