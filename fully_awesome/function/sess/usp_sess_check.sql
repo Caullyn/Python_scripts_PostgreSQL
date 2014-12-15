@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION sess.usp_sess_check(
     i_sess TEXT
 )
 RETURNS TABLE(
-    asr_id BIGINT,
+    asr_user BIGINT,
     status_id INT,
     status_desc TEXT
 )
@@ -16,14 +16,12 @@ DECLARE
     _status_desc TEXT;
 BEGIN
     
-    RAISE NOTICE '%', '1';
     SELECT a[1], a[2]
       INTO _user, _sess
       FROM (
             SELECT regexp_split_to_array(i_sess, ',')
         ) AS dt(a);
         
-    RAISE NOTICE '%', '2';
     SELECT ses_id
       INTO _ses_id
       FROM sess.session
@@ -31,7 +29,6 @@ BEGIN
        AND ses_session = _sess
        AND NOT ses_expired;
     
-    RAISE NOTICE '%', '1';
     IF _ses_id > 0 THEN
         _status_id = 200;
         _status_desc = 'OK.';

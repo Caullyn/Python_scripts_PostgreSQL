@@ -71,7 +71,7 @@ BEGIN;
         
     CREATE TABLE band.band (
         ban_id BIGSERIAL PRIMARY KEY,
-        ban_asr_id BIGINT REFERENCES abuser.abuser(asr_id) NOT NULL,
+        ban_user BIGINT REFERENCES abuser.abuser(asr_user) NOT NULL,
         ban_geo_id BIGINT REFERENCES geo.geo_location(geo_id) NOT NULL,
         ban_name TEXT UNIQUE NOT NULL,
         ban_email TEXT UNIQUE NOT NULL,
@@ -90,7 +90,7 @@ BEGIN;
          
     CREATE TABLE event.event (
         evt_id BIGSERIAL PRIMARY KEY,
-        evt_asr_id BIGINT REFERENCES abuser.abuser(asr_id),
+        evt_asr_user BIGINT REFERENCES abuser.abuser(asr_user) NOT NULL,
         evt_name TEXT NOT NULL,
         evt_description TEXT,
         evt_start TIMESTAMP WITH TIME ZONE NOT NULL,

@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION event.usp_event_add_update(
-    i_asr_email TEXT,
+    i_sess TEXT,
     i_evt_name TEXT,
     i_evt_description TEXT,
     i_evt_start TIMESTAMP WITH TIME ZONE,
@@ -21,19 +21,18 @@ RETURNS TABLE(
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    _asr_id BIGINT;
+    _user BIGINT;
     _evt_id BIGINT;
     _add_id BIGINT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
 BEGIN
-
-    SELECT asr_id
-      FROM abuser.abuser
-     WHERE asr_email = i_asr_email
-      INTO _asr_id;
     
+    SELECT asr_user 
+      INTO _user
+      FROM sess.usp_sess_check(i_sess);
+      
     SELECT add_id
       INTO _add_id
       FROM geo.address
@@ -64,7 +63,7 @@ BEGIN
         _status_desc = 'evt_id updated: ' || i_evt_id::text;
     ELSE
         INSERT INTO event.event (evt_asr_id, evt_name, evt_description, evt_start, evt_end, evt_geo_id, evt_add_id)
-        VALUES (_asr_id, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id, _add_id)
+        VALUES (_user, i_evt_name, i_evt_description, i_evt_start, i_evt_end, i_evt_geo_id, _add_id)
         RETURNING evt_id INTO _evt_id;
         _status_id = 200;
         _status_desc = 'evt_id inserted: ' || _evt_id::text;

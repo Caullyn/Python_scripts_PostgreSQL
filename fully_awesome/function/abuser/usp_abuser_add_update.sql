@@ -4,6 +4,7 @@ CREATE OR REPLACE FUNCTION abuser.usp_abuser_add_update(
     i_geo_id BIGINT
 )
 RETURNS TABLE(
+    asr_user_id BIGINT,
     session_id TEXT,
     status_id INT,
     status_desc TEXT
@@ -55,6 +56,6 @@ BEGIN
           INTO _sess_id, _status_id, _status_desc;
     END IF;
     
-    RETURN QUERY SELECT _sess_id, _status_id, _status_desc;
+    RETURN QUERY SELECT _user, _sess_id, _status_id, _status_desc;
 END;
 $$;

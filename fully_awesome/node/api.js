@@ -132,10 +132,10 @@ app.get('/api/event_add_update', function (req, res){
 	    evt_id = req.param("evt_id")
     };
 	dbWrapper.connect();
-
+    console.log(req);
     query_string = 'SELECT event_id, status_id, status_desc \
                       FROM event.usp_event_add_update( \
-                       $$' + req.param("email") + '$$, \
+                       $$' + req.param("sess") + '$$, \
                        $$' + req.param("name") + '$$,  \
                        $$' + req.param("description") + '$$,  \
                        $$' + req.param("start") + '$$,  \

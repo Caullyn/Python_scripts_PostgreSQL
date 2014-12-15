@@ -1,17 +1,19 @@
 To install the entire stack and run locally:
 
+    git clone https://github.com/Caullyn/Python_scripts_PostgreSQL
+    
 Deploy DB Schema.
 Create a PostgreSQL Database, and run deploy_tool.py for schema and deploy.sh for DB Functions (additional python packages may be required). Also optional fixture examples.
 
     psql -c 'create database wotjam'
-    cd tools/
+    cd fully_awesome/tools
     python deploy_tool.py -t2 wotjam postgres
     sh deploy.sh 
     psql -f fixtures.sql wotjam
     
 Run nodeJS api
 
-    cd node/
+    cd ../node/
     node api.js
 
 In a new terminal window, Run http-server

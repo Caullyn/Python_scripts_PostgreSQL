@@ -114,6 +114,9 @@ function sessionCheck(){
                  success: function (data) {  
                     sess_ser = eval(data); 
                     asr_id = sess_ser[0]["asr_id"];    
+                    console.log("sess_ser[0]: " + sess_ser[0]);
+                    console.log("sess_ser[0][asr_id]: " + sess_ser[0]["asr_id"]);
+                    console.log("asr_id: " + asr_id);
                     sess_ret = sess_ser[0]["status_id"];                        
                  },
                  error: function () {
@@ -123,70 +126,83 @@ function sessionCheck(){
         if (sess_ret > 200) {            
             window.location.assign("login.html");
         };
-        return asr_id;
     }
     else {
         window.location.assign("login.html");
     }
+    
+    
+    return asr_id;
         
 }  
 
-function imgurUpload(bass, imgType) {
 
-    var auth;
-    auth = 'Client-ID bd900681799a752';
+$(document).ready(function () {
+    function imgurUpload(bass, imgType) {
+
+        var auth;
+        auth = 'Client-ID bd900681799a752';
     
-    $.ajax({
-      url: 'https://api.imgur.com/3/upload',
-      type: 'POST',
-      headers: {
-        Authorization: 'Client-ID bd900681799a752',
-        Accept: 'application/json'
-      },
-      data: {
-        image: bass,
-        type: imgType
-      },
-      success: function(result) {
-        var api_url = 'http://localhost:4242/api/';
-        var asr_id = sessionCheck();
-        var name = document.getElementById("evtName");
-        var desc = document.getElementById("evtDesc");
-        var start = document.getElementById("usereventstart").value;
-        var end = document.getElementById("usereventend").value;
-        var evt_id = URI(document.evt_id).query(true).value;
-        var band = document.getElementById("usereventband");
-        var lat = document.getElementById("latbox").value;
-        var lng = document.getElementById("lngbox").value;
-        var add = document.getElementById("addybox").value;
-        var eiau_ser = [];
-        var imgur = result.data.id; 
-        console.log('cool ' + imgur );
         $.ajax({
-             type: "GET",
-             url: api_url + 'event_add_update?email=' + email + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add,
-             datatype: 'JSON',
-             success: function (data) {  
-                eiau_ser = eval(data); 
-                window.location.assign("eventone.html?evt_id=" + eiau_ser[0]["event_id"]);   
-             },
-             error: function () {
-                alert(eiau_ser[0]["status_desc"]); 
-            }
-        })
+          url: 'https://api.imgur.com/3/upload',
+          type: 'POST',
+          headers: {
+            Authorization: 'Client-ID bd900681799a752',
+            Accept: 'application/json'
+          },
+          data: {
+            image: bass,
+            type: imgType
+          },
+          success: function(result) {
+            var imgur = result.data.id; 
+            console.log('cool ' + imgur );
         
-        var divTest = document.getElementById("imgTest");
-        return false;
-    }})
-}
+            return imgur.data.id;
+        }})
+    }
 
+
+});
+function eventAddUpdate(imgur){
+    var api_url = 'http://localhost:4242/api/';
+    var sess = localStorage.getItem("sess");
+    var name = document.getElementById("evtName").value;
+    var desc = document.getElementById("evtDesc").value;
+    var start = document.getElementById("usereventstart").value;
+    var end = document.getElementById("usereventend").value;
+    var evt_id = URI(document.evt_id).query(true).value;
+    var band = document.getElementById("usereventband");
+    var lat = document.getElementById("latbox").value;
+    var lng = document.getElementById("lngbox").value;
+    var add = document.getElementById("addybox").value;
+    var eiau_ser = [];
+    
+    console.log(api_url + 'event_add_update?sess=' + sess + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add);
+    $.ajax({
+         type: "GET",
+         url: api_url + 'event_add_update?sess=' + sess + '&name=' + name + '&description=' + desc + '&start=' + start + '&end=' + end + '&evt_id=' + evt_id + '&band=' + band + '&img=' + imgur + '&img_type=jpeg&lat=' + lat + '&lng=' + lng + '&add=' + add,
+         datatype: 'JSON',
+         success: function (data) {  
+            eiau_ser = eval(data); 
+            window.location.assign("eventone.html?evt_id=" + eiau_ser[0]["event_id"]);   
+         },
+         error: function () {
+            alert(eiau_ser[0]["status_desc"]); 
+        }
+    })
+}
+    
 function loadImageFileAsURL(){
+    console.log("loadImageFileAsUrl() called.");
     var filesSelected = document.getElementById("inputFileToLoad").files;
+    var imgur = "";
+    console.log(filesSelected);
     if (filesSelected.length > 0){
         var fileToLoad = filesSelected[0];
         var imgType = filesSelected[0].name.split('.').pop().toLowerCase();
         var fileReader = new FileReader(); 
-
+    
         fileReader.onload = function(fileLoadedEvent) {
             var srcData = fileLoadedEvent.target.result; 
 
@@ -196,10 +212,12 @@ function loadImageFileAsURL(){
 
             divTest.innerHTML = newImage.outerHTML;
 
-            imgurUpload(srcData.substring(23), imgType);
+            imgur = imgurUpload(srcData.substring(23), imgType);
         }
         fileReader.readAsDataURL(fileToLoad);
     }
+    eventAddUpdate(imgur);
+
 }
 sessionCheck();    
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -217,7 +235,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
     <form name="eventadd" accept-charset="utf-8">
     <table>
         <tr><td>
-        <input type="text" align="middle" id="eventname" name="evtName" placeholder="Event name here." size="44" required />  
+        <input id="evtName" type="text" align="middle" name="Name" placeholder="Event name here." size="44" required />  
         </td></tr>
         <tr><td>
         <textarea id="evtDesc" name="Description" placeholder="Event Description" cols="32" rows="7"></textarea>  
