@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION event.usp_event_add_update(
     i_evt_end TIMESTAMP WITH TIME ZONE,
     i_evt_id BIGINT,
     i_evt_geo_id BIGINT,
-    i_band TEXT,
+    i_band TEXT[],
     i_img TEXT,
     i_img_type TEXT,
     i_lat NUMERIC(20,17),
@@ -24,6 +24,9 @@ DECLARE
     _user BIGINT;
     _evt_id BIGINT;
     _add_id BIGINT;
+    _band_id BIGINT;
+    _len INT;
+    _band_name TEXT;
     _status_id INT;
     _status_desc TEXT;
     _pass TEXT;
@@ -49,7 +52,7 @@ BEGIN
                evt_name = i_evt_name,
                evt_start = i_evt_start,
                evt_end = i_evt_end,
-               evt_add_id = i_add_id,
+               evt_add_id = _add_id,
                evt_modified = now()
          WHERE evt_id = i_evt_id;
         
@@ -67,6 +70,28 @@ BEGIN
         RETURNING evt_id INTO _evt_id;
         _status_id = 200;
         _status_desc = 'evt_id inserted: ' || _evt_id::text;
+    END IF;
+    _len = array_length(i_band, 1);
+    IF _len > 1 THEN
+        FOR i IN 1..(_len) LOOP
+            IF i % 2 = 1 THEN
+                _band_id = i_band[i];
+                _band_name = i_band[i+1];
+                IF _band_id IS NULL OR _band_id = 0 THEN
+                    INSERT INTO band.band(ban_user, ban_geo_id, ban_name)
+                    VALUES (_user, i_evt_geo_id, _band_name)
+                 RETURNING ban_id INTO _band_id;
+                END IF;
+                INSERT INTO event.event_band(evb_ban_id, evc_evt_id)
+                SELECT _band_id, _evt_id
+                 WHERE NOT EXISTS (
+                        SELECT evb_id
+                          FROM event.event_band
+                         WHERE evb_ban_id = _ban_id
+                           AND evb_evt_id = _evt_id
+                           );
+            END IF;
+        END LOOP;
     END IF;
     IF i_img IS NOT NULL THEN
         INSERT INTO event.event_image (evi_evt_id, evi_img, evi_type, evi_default)
