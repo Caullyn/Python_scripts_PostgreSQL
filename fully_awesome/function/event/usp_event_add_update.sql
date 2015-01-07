@@ -24,8 +24,8 @@ DECLARE
     _user BIGINT;
     _evt_id BIGINT;
     _add_id BIGINT;
-    _band_id BIGINT;
     _len INT;
+    _band_id BIGINT;
     _band_name TEXT;
     _status_id INT;
     _status_desc TEXT;
@@ -82,12 +82,12 @@ BEGIN
                     VALUES (_user, i_evt_geo_id, _band_name)
                  RETURNING ban_id INTO _band_id;
                 END IF;
-                INSERT INTO event.event_band(evb_ban_id, evc_evt_id)
+                INSERT INTO event.event_band(evb_ban_id, evb_evt_id)
                 SELECT _band_id, _evt_id
                  WHERE NOT EXISTS (
                         SELECT evb_id
                           FROM event.event_band
-                         WHERE evb_ban_id = _ban_id
+                         WHERE evb_ban_id = _band_id
                            AND evb_evt_id = _evt_id
                            );
             END IF;
