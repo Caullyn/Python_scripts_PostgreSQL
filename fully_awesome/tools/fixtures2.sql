@@ -11,6 +11,7 @@ BEGIN
           
     PERFORM  band.usp_band_add_update(
         _sess,
+        NULL,
         'wotjam ample sample example',
         'wase@gmail.com',
         'Just a band example.',
