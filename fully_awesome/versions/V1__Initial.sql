@@ -74,8 +74,9 @@ BEGIN;
         ban_user BIGINT REFERENCES abuser.abuser(asr_user) NOT NULL,
         ban_geo_id BIGINT REFERENCES geo.geo_location(geo_id) NOT NULL,
         ban_name TEXT NOT NULL,
-        ban_email TEXT UNIQUE,
+        ban_email TEXT,
         ban_description TEXT,
+        ban_detail JSON,
         ban_created TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
         ban_modified TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
         );
