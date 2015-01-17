@@ -15,6 +15,7 @@ BEGIN
         'wotjam ample sample example',
         'wase@gmail.com',
         'Just a band example.',
+        '{}',
         1); 
 
     PERFORM  event.usp_event_add_update(
